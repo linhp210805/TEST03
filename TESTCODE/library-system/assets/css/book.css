@@ -1,0 +1,529 @@
+/* ================== 1. BIẾN CHUẨN ================== */
+:root {
+    --primary-blue: #2563eb;
+    --active-orange: #f97316;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+    --text-main: #333333;
+    --text-sub: #718096;
+    --text-muted: #4a5568;
+    --border-color: #edf2f7;
+    --success-green: #00875a;
+    --success-bg: #e6fffa;
+    --radius: 8px;
+    --shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* ================== 2. RESET ================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-main);
+}
+
+/* ================== 3. LAYOUT CHÍNH ================== */
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ================== 4. SIDEBAR ================== */
+.sidebar {
+    width: 260px;
+    background-color: #2258ba;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 30px 25px 20px;
+    gap: 12px;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    background-color: var(--white);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    position: relative;
+    border: 2px solid #ddd;
+}
+
+.logo::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 20%;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, #1e66c6 50%, var(--active-orange) 50%);
+    border-radius: 2px;
+}
+
+.logo-text {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.logo.lg {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+}
+
+.logo.lg .logo-text { font-size: 20px; }
+
+.sidebar-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.nav-links {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 15px;
+    list-style: none;
+}
+
+.nav-links li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 15px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: var(--white);
+    text-decoration: none;
+}
+
+.nav-links li a i { width: 24px; text-align: center; font-size: 22px; }
+
+.nav-links li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-links li.active a {
+    background-color: #f97316;
+    color: var(--white);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.logout-wrapper {
+    padding: 15px;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 15px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    background: transparent;
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.logout-btn:hover { background-color: rgba(255,255,255,0.1); }
+
+/* ================== 5. HEADER ================== */
+.header {
+    background-color: var(--white);
+    margin: -20px -30px 30px -30px; /* bù lại padding của main-content */
+    padding: 20px 30px;
+    border-top: 4px solid var(--active-orange);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.header-left h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.header-left p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: right;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: #0f172a;
+}
+
+.user-role {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* ================== 6. SEARCH & BUTTONS ================== */
+.search-section.card,
+.table-section.card {
+    background-color: var(--white);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.section-label {
+    display: block;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.section-meta {
+    margin-bottom: 15px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.search-bar, .input-group {
+    display: flex;
+    gap: 15px;
+    align-items: stretch;
+}
+
+.input-with-icon, .input-group { position: relative; flex-grow: 1; }
+
+.input-with-icon i, .input-group i {
+    position: absolute;
+    left: 15px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-sub);
+    font-size: 18px;
+}
+
+.input-with-icon input, .input-group input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 14px;
+    outline: none;
+    min-height: 44px;
+}
+
+.input-group input:focus { border-color: var(--primary-blue); background: var(--white); }
+
+button, .btn {
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    height: 44px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.search-bar > button,
+.search-bar > .btn {
+    flex: 0 0 auto;
+    min-width: 150px;
+}
+
+/* Đồng bộ với style.css của borrow.html */
+.btn-primary {
+    font-size: 14px;
+    font-weight: 600;
+    height: 44px;
+}
+.btn-primary.btn-orange {
+    background-color: var(--active-orange);
+    color: var(--white);
+}
+.btn-primary.btn-orange:hover {
+    background-color: #ea580c;
+    color: var(--white);
+    filter: none;
+    transform: none;
+}
+.btn-primary.btn-blue {
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+.btn-primary.btn-blue:hover {
+    background-color: #1d4ed8;
+    color: var(--white);
+    filter: none;
+    transform: none;
+}
+
+#bookSearchBtn,
+#bookAddBtn {
+    height: 44px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+#bookSearchBtn {
+    width: 152px;
+}
+
+#bookAddBtn {
+    width: 184px;
+}
+
+button:hover { transform: translateY(-1px); filter: brightness(1.1); }
+
+.btn-orange { background: var(--active-orange); color: var(--white); }
+.btn-blue { background: var(--primary-blue); color: var(--white); display: flex; gap: 8px; align-items: center; }
+
+.btn-orange:hover { background: #ea580c; }
+
+.table-wrapper {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.table-section.card table {
+    margin-top: 0;
+    min-width: 900px;
+}
+
+.table-section.card {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-section.card .table-wrapper {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+/* ================== 7. TABLE ================== */
+table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 14px; table-layout: auto; }
+
+th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    text-align: left;
+    padding: 16px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #1f2937;
+    background-color: #eef2f7;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+td {
+    text-align: left;
+    padding: 16px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+}
+
+/* Thêm bẻ chữ cho tên sách và tác giả để không bị khuất ngang */
+table td:nth-child(2), table td:nth-child(3) {
+    white-space: normal !important;
+    min-width: 150px;
+    max-width: 250px;
+}
+
+/* KHÔNG ÉP CỘT THAO TÁC VỀ LỀ PHẢI NỮA ĐỂ KHÔNG BỊ TRÀN TEXT */
+/*
+table th:last-child, table td:last-child {
+    width: 1%;
+    text-align: right;
+    white-space: nowrap;
+    padding-right: 24px;
+}
+*/
+
+tbody tr:hover { background-color: #fafbfc; }
+
+.status-badge { background: #EBF8FF; color: #3182CE; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; }
+
+/* BỎ display: inline-flex VÀ justify-content: flex-end ĐỂ CÁC NÚT KHÔNG BỊ ÉP SANG PHẢI GÂY CHỒNG CHÉO CHỮ Ở CÁC CỘT KHÁC */
+.actions {
+    display: flex;
+    gap: 8px; /* Tăng khoảng cách các nút lên một chút */
+    font-size: 1.1rem;
+    color: #CBD5E0;
+}
+.actions i { cursor: pointer; transition: 0.2s; padding: 4px; border-radius: 4px; }
+.actions .fa-book-open:hover { color: var(--primary-blue); transform: scale(1.1); }
+.actions .fa-pen-to-square:hover { color: var(--primary-blue); background: #ebf4ff; }
+.actions .fa-trash-can:hover { color: var(--active-orange); background: #fff5f2; }
+
+/* ================== 8. MODAL & CONFIRM ================== */
+.modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: var(--white); padding: 30px; border-radius: 20px; width: 500px; position: relative; }
+
+.confirm-box { width: 400px; text-align: center; }
+.confirm-box h3 { font-size: 1.25rem; margin-bottom: 12px; }
+.confirm-box p { color: var(--text-sub); font-size: 0.9rem; margin-bottom: 20px; }
+.warning-text { color: var(--active-orange); font-weight: 500; margin-top: 10px; }
+
+.confirm-buttons { display: flex; justify-content: center; gap: 12px; }
+.confirm-buttons.vertical { flex-direction: column; }
+
+.btn-save { background: var(--primary-blue); color: var(--white); flex: 2; }
+.btn-cancel { background: #EDF2F7; color: var(--text-main); flex: 1; }
+.btn-white { background: var(--white); color: var(--text-main); border: 1px solid #E2E8F0; }
+.btn-orange-confirm { background: var(--active-orange); color: var(--white); padding: 12px; width: 100%; }
+
+/* ================== 9. TOAST ================== */
+#toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+.toast { background: var(--success-bg); color: var(--success-green); border: 1px solid #b2f5ea; padding: 16px 25px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.08); animation: slideIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+
+/* ================== 9. FORM THÊM / SỬA SÁCH ================== */
+.form-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: var(--text-main);
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 14px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    outline: none;
+    transition: 0.2s;
+    font-weight: 600;            /* làm chữ đậm hơn */
+    color: var(--text-main);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--primary-blue);
+    background-color: var(--white);
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+/* Responsive cho modal */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+    }
+}
+
+/* ================== 11. RESPONSIVE ================== */
+@media (max-width: 1024px) {
+    .main-content { margin-left: 0; }
+    .sidebar { width: 100%; height: auto; flex-direction: row; }
+    .nav-links { flex-direction: row; overflow-x: auto; }
+    .nav-links li a span { display: none; }
+}

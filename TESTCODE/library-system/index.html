@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý Thư viện DUE</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+</head>
+
+<body>
+
+    <!-- DASHBOARD LAYOUT -->
+    <div class="dashboard-container hidden" id="dashboardPage">
+        <!-- Sidebar -->
+        <aside id="app-sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">DUE</span>
+                </div>
+                <h2>Thư viện DUE</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active" id="nav-overview"><a href="#"><i class='bx bxs-grid-alt'></i> Tổng quan</a></li>
+                <li><a href="templates/pages/circulation/borrow.html"><i class='bx bx-book-reader'></i> Mượn sách</a></li>
+                <li><a href="templates/pages/circulation/returns.html"><i class='bx bx-history'></i> Trả sách</a></li>
+                <li><a href="templates/pages/books/book-list.html"><i class='bx bx-book'></i> Quản lý sách</a></li>
+                <li><a href="templates/pages/users/user-list.html"><i class='bx bx-group'></i> Người dùng</a></li>
+                <li><a href="templates/pages/reports/statistics.html"><i class='bx bx-line-chart'></i> Báo cáo</a></li>
+            </ul>
+            <div class="logout-wrapper">
+                <a href="#" class="logout-btn" onclick="handleLogout()">
+                    <i class='bx bx-log-out'></i> Đăng xuất
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 id="pageTitle">Tổng quan</h1>
+                    <p>Đại học Kinh tế - Đại học Đà Nẵng</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-details">
+                            <span class="user-name">Nguyễn Văn An</span>
+                            <span class="user-role">Thủ thư</span>
+                        </div>
+                        <div class="user-avatar">N</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE 1: OVERVIEW -->
+            <div id="page-overview">
+                <!-- Stats Overview -->
+                <section class="overview-cards">
+                    <div class="card card-blue">
+                        <div class="card-content">
+                            <p class="card-title">Tổng số sách <i class='bx bx-book-bookmark'></i></p>
+                            <h3>61</h3>
+                            <p class="card-desc">49 sách còn trong kho</p>
+                        </div>
+                    </div>
+                    <div class="card card-blue">
+                        <div class="card-content">
+                            <p class="card-title">Sách đang mượn <i class='bx bx-book-open'></i></p>
+                            <h3>3</h3>
+                            <p class="card-desc">1 phiếu quá hạn</p>
+                        </div>
+                    </div>
+                    <div class="card card-blue">
+                        <div class="card-content">
+                            <p class="card-title">Tổng độc giả <i class='bx bx-group'></i></p>
+                            <h3>4</h3>
+                            <p class="card-desc">Đang hoạt động</p>
+                        </div>
+                    </div>
+                    <div class="card card-red border-left-red">
+                        <div class="card-content">
+                            <p class="card-title">Phiếu quá hạn <i class='bx bx-calendar-x'></i></p>
+                            <h3 class="text-red">1</h3>
+                            <p class="card-desc">Cần xử lý</p>
+                        </div>
+                    </div>
+                    <div class="card card-red border-left-red">
+                        <div class="card-content">
+                            <p class="card-title">Tiền phạt chưa thu <i class='bx bx-money'></i></p>
+                            <h3 class="text-red">50.000đ</h3>
+                            <p class="card-desc">Cần thu</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Charts Section -->
+                <section class="charts-section">
+                    <h2>Biểu đồ nhanh</h2>
+                    <div class="charts-grid">
+                        <!-- Trạng thái sách -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <span class="title">Trạng thái sách</span>
+                                <span class="subtitle">Kho vs Đang mượn</span>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="booksStatusChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Độc giả -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <span class="title">Độc giả</span>
+                                <span class="subtitle">Hoạt động</span>
+                            </div>
+                            <div class="chart-wrapper" style="position: relative;">
+                                <canvas id="readersChart"></canvas>
+                                <div class="donut-inner">
+                                    <span class="num">4</span>
+                                    <span>Đang hoạt động</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Xu hướng quá hạn -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <span class="title">Xu hướng quá hạn</span>
+                                <span class="subtitle">7 ngày</span>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="overdueChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Tiền phạt -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <span class="title">Tiền phạt</span>
+                                <span class="subtitle">Đã thu vs Chưa thu</span>
+                            </div>
+                            <div class="progress-section">
+                                <div class="progress-item text-red">
+                                    <div class="prog-label">
+                                        <span>Chưa thu</span>
+                                        <strong>50.000đ</strong>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress bg-red" style="width: 100%;"></div>
+                                    </div>
+                                </div>
+                                <div class="progress-item text-blue">
+                                    <div class="prog-label">
+                                        <span>Đã thu</span>
+                                        <strong>0đ</strong>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress bg-blue" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                                <p class="target-desc">Mục tiêu: thu toàn bộ trong tuần</p>
+                                <div class="legend-inline">
+                                    <span><span class="dot dot-red"></span> Chưa thu</span>
+                                    <span><span class="dot dot-gray"></span> Đã thu</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- PAGE 2: TRẢ SÁCH (RETURN BOOKS) -->
+            <div id="page-return" class="hidden">
+                <!-- Search Section -->
+                <div class="search-section search-uniform card">
+                    <p class="section-label">Tìm kiếm</p>
+                    <div class="search-bar">
+                        <div class="input-with-icon">
+                            <i class='bx bx-search'></i>
+                            <input type="text" id="searchInput" aria-label="Tim kiem phieu muon" placeholder="Nhập thông tin để tìm kiếm"
+                                oninput="performSearch(false)" onkeyup="if(event.key === 'Enter') performSearch()">
+                        </div>
+                        <button class="btn btn-primary btn-orange" type="button" onclick="performSearch()"><i class='bx bx-search'></i> Tìm kiếm</button>
+                        <button class="btn btn-primary btn-blue" type="button" onclick="document.getElementById('searchInput').value=''; performSearch();">Đặt lại</button>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs-container">
+                    <div class="tab active" onclick="switchTab(this, 'tab-1')">Xác nhận trả sách</div>
+                    <div class="tab" onclick="switchTab(this, 'tab-2')">Thanh toán phí phạt</div>
+                    <div class="tab" onclick="switchTab(this, 'tab-3')">Xử lý mất sách</div>
+                    <div class="tab" onclick="switchTab(this, 'tab-4')">Xác nhận đền sách</div>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-content card">
+
+                    <!-- Tab 1: Xác nhận trả sách -->
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="data-table-scroll">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã phiếu</th>
+                                    <th>Mã sách</th>
+                                    <th>Tên sách</th>
+                                    <th>Người mượn</th>
+                                    <th>Ngày mượn</th>
+                                    <th>Hạn trả</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>KT001</td>
+                                    <td>Kinh tế vi mô</td>
+                                    <td>Trần Thị Bình</td>
+                                    <td>10/1/2026</td>
+                                    <td>24/1/2026</td>
+                                    <td><span class="badge badge-blue">Đang mượn</span></td>
+                                    <td><span class="badge badge-red-btn" onclick="openPopup('popup-return', this)">Xác
+                                            nhận trả</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>TC001</td>
+                                    <td>Nguyên lý kế toán</td>
+                                    <td>Trần Lâm</td>
+                                    <td>10/1/2026</td>
+                                    <td>24/1/2026</td>
+                                    <td><span class="badge badge-blue">Đang mượn</span></td>
+                                    <td><span class="badge badge-red-btn" onclick="openPopup('popup-return', this)">Xác
+                                            nhận trả</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>KT002</td>
+                                    <td>Kinh tế vĩ mô</td>
+                                    <td>Nguyễn Kiệm</td>
+                                    <td>10/1/2026</td>
+                                    <td>24/1/2026</td>
+                                    <td><span class="badge badge-blue">Đang mượn</span></td>
+                                    <td><span class="badge badge-red-btn" onclick="openPopup('popup-return', this)">Xác
+                                            nhận trả</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Thanh toán phí phạt -->
+                    <div id="tab-2" class="tab-pane hidden">
+                        <div class="data-table-scroll">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã phạt</th>
+                                    <th>Người dùng</th>
+                                    <th>Mã người dùng</th>
+                                    <th>Tổng tiền phạt chưa thanh toán</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Trần Thị Bình</td>
+                                    <td>2051010001</td>
+                                    <td class="text-red font-weight-bold">50.000đ</td>
+                                    <td><span class="badge badge-blue-btn" onclick="openPopup('popup-fine', this)">Thanh
+                                            toán</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Nguyễn Tiến Phát</td>
+                                    <td>2051010002</td>
+                                    <td class="text-red font-weight-bold">80.000đ</td>
+                                    <td><span class="badge badge-blue-btn" onclick="openPopup('popup-fine', this)">Thanh
+                                            toán</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Xử lý mất sách -->
+                    <div id="tab-3" class="tab-pane hidden">
+                        <div class="data-table-scroll">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã phiếu</th>
+                                    <th>Sách</th>
+                                    <th>Mã sách</th>
+                                    <th>Người mượn</th>
+                                    <th>Hạn trả</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Kinh tế vi mô</td>
+                                    <td>KT001</td>
+                                    <td>Trần Thị Bình</td>
+                                    <td>24/1/2026</td>
+                                    <td><span class="badge badge-orange">Quá hạn</span></td>
+                                    <td><span class="badge badge-red-btn" onclick="openPopup('popup-lost', this)"><i
+                                                class='bx bx-error'></i> Báo mất</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Kinh tế vĩ mô</td>
+                                    <td>KT002</td>
+                                    <td>Nguyễn Kiệm</td>
+                                    <td>26/1/2026</td>
+                                    <td><span class="badge badge-blue">Đang mượn</span></td>
+                                    <td><span class="badge badge-red-btn" onclick="openPopup('popup-lost', this)"><i
+                                                class='bx bx-error'></i> Báo mất</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Xác nhận đền sách -->
+                    <div id="tab-4" class="tab-pane hidden">
+                        <div class="data-table-scroll">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã hồ sơ</th>
+                                    <th>Sách cần đền</th>
+                                    <th>Mã sách</th>
+                                    <th>Người đền</th>
+                                    <th>Ngày khai báo</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Kinh tế vi mô</td>
+                                    <td>KT001</td>
+                                    <td>Trần Thị Bình</td>
+                                    <td>24/1/2026</td>
+                                    <td>
+                                        <div class="action-badges">
+                                            <span class="badge badge-red-btn"
+                                                onclick="openPopup('popup-replace', this)">Chờ đền sách</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- AUTH PAGES (Full Screen) -->
+    <div class="auth-page active" id="authPage">
+
+        <!-- Login Form -->
+        <div class="auth-form-container active" id="loginModal">
+            <div class="auth-header">
+                <div class="logo lg">
+                    <span class="logo-text">DUE</span>
+                </div>
+                <h2>ĐẠI HỌC ĐÀ NẴNG</h2>
+                <p>Thư viện TRƯỜNG ĐẠI HỌC KINH TẾ</p>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Mã sinh viên</label>
+                    <input type="text" value="admin" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" value="password" required>
+                </div>
+                <div class="forgot-link">
+                    <a href="#" onclick="showModal('forgotModal')">Quên mật khẩu?</a>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+            </form>
+            <div class="auth-footer">
+                <p>Cần hỗ trợ? Liên hệ: <a href="mailto:thuvien@due.edu.vn">thuvien@due.edu.vn</a></p>
+                <p>Hotline: <a href="tel:02363842308">0236 3842 308</a></p>
+            </div>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div class="auth-form-container" id="forgotModal">
+            <div class="auth-header">
+                <div class="logo lg">
+                    <span class="logo-text">DUE</span>
+                </div>
+                <h2>ĐẠI HỌC ĐÀ NẴNG</h2>
+                <p>Thư viện TRƯỜNG ĐẠI HỌC KINH TẾ</p>
+            </div>
+            <form onsubmit="showModal('resetModal'); return false;">
+                <div class="form-group">
+                    <label>Địa chỉ email</label>
+                    <input type="email" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Gửi yêu cầu đặt lại mật khẩu</button>
+                <div class="forgot-link text-center mt-2">
+                    <a href="#" onclick="showModal('loginModal')">Quay lại đăng nhập</a>
+                </div>
+            </form>
+            <div class="auth-footer">
+                <p>Cần hỗ trợ? Liên hệ: <a href="mailto:thuvien@due.edu.vn">thuvien@due.edu.vn</a></p>
+                <p>Hotline: <a href="tel:02363842308">0236 3842 308</a></p>
+            </div>
+        </div>
+
+        <!-- Reset Password Form -->
+        <div class="auth-form-container" id="resetModal">
+            <div class="auth-header">
+                <div class="logo lg">
+                    <span class="logo-text">DUE</span>
+                </div>
+                <h2>ĐẠI HỌC ĐÀ NẴNG</h2>
+                <p>Thư viện TRƯỜNG ĐẠI HỌC KINH TẾ</p>
+            </div>
+            <form onsubmit="showModal('loginModal'); alert('Đổi mật khẩu thành công!'); return false;">
+                <div class="form-group">
+                    <label>Mật khẩu cũ</label>
+                    <input type="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu mới</label>
+                    <input type="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu mới</label>
+                    <input type="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Đổi mật khẩu</button>
+            </form>
+            <div class="auth-footer">
+                <p>Cần hỗ trợ? Liên hệ: <a href="mailto:thuvien@due.edu.vn">thuvien@due.edu.vn</a></p>
+                <p>Hotline: <a href="tel:02363842308">0236 3842 308</a></p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ACTION POPUPS OVERLAY -->
+    <div class="popup-overlay" id="popupOverlay">
+
+        <!-- Xu nhan tra sach -->
+        <div class="popup-modal" id="popup-return">
+            <div class="popup-header">
+                <h3>Xác nhận trả sách</h3>
+                <button class="popup-close" onclick="closePopup()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="popup-content">
+                <div class="info-grid">
+                    <div><label>Mã sách</label><strong>KT001</strong></div>
+                    <div><label>Tên sách</label><strong>Kinh tế học vi mô</strong></div>
+                    <div><label>Người mượn</label><strong>Trần Thị Bình</strong></div>
+                    <div><label>Hạn trả</label><strong>24/1/2026</strong></div>
+                </div>
+                <div class="form-group mb-0 mt-3">
+                    <label>Tình trạng sách khi trả <span class="text-red">*</span></label>
+                    <div class="radio-group col-align">
+                        <label class="radio-label"><input type="radio" name="state" checked> Tốt</label>
+                        <label class="radio-label"><input type="radio" name="state"> Hư hỏng</label>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer center-footer border-top-light">
+                <button class="btn btn-outline" onclick="closePopup()">Hủy</button>
+                <button class="btn btn-orange" onclick="confirmAction('Xác nhận trả sách thành công')">Xác nhận</button>
+            </div>
+        </div>
+
+        <!-- Xu ly mat sach -->
+        <div class="popup-modal" id="popup-lost">
+            <div class="popup-header">
+                <h3>Xử lý mất sách</h3>
+                <button class="popup-close" onclick="closePopup()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="popup-content">
+                <div class="info-grid">
+                    <div><label>Sách</label><strong>Kinh tế học vi mô</strong></div>
+                    <div><label>Người mượn</label><strong>Trần Thị Bình</strong></div>
+                </div>
+                <div class="form-group mt-3">
+                    <label>Ngày khai báo mất <span class="text-red">*</span></label>
+                    <div class="input-with-icon-right">
+                        <input type="date" class="form-input" value="2026-01-24">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <textarea class="form-input" rows="4"></textarea>
+                </div>
+                <div class="form-group mb-0">
+                    <label>Phương án bồi hoàn <span class="text-red">*</span></label>
+                    <div class="radio-group col-align">
+                        <label class="radio-label"><input type="radio" name="lost-state" checked> Bồi thường tiền
+                            (500.000đ)</label>
+                        <label class="radio-label"><input type="radio" name="lost-state"> Đền sách mới</label>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer border-top-light" style="justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="closePopup()">Hủy</button>
+                <button class="btn btn-orange" onclick="confirmAction('Xử lý mất sách thành công')">Xác nhận</button>
+            </div>
+        </div>
+
+        <!-- Xac nhan den sach -->
+        <div class="popup-modal" id="popup-replace">
+            <div class="popup-header">
+                <h3>Xác nhận đền sách</h3>
+                <button class="popup-close" onclick="closePopup()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="popup-content">
+                <div class="info-grid">
+                    <div style="grid-column: span 2;"><label>Mã hồ sơ</label><strong>1</strong></div>
+                    <div><label>Sách cần đền</label><strong>Kinh tế vi mô</strong></div>
+                    <div><label>Mã sách</label><strong>KT001</strong></div>
+                    <div><label>Người đền</label><strong>Trần Thị Bình</strong></div>
+                    <div><label>Ngày khai báo</label><strong>24/1/2026</strong></div>
+                </div>
+            </div>
+            <div class="popup-footer border-top-light" style="justify-content: flex-end;">
+                <button class="btn btn-outline" onclick="closePopup()">Hủy</button>
+                <button class="btn btn-orange" onclick="confirmAction('Xác nhận đền sách thành công')">Xác nhận</button>
+            </div>
+        </div>
+
+        <!-- Thanh toan phi phat -->
+        <div class="popup-modal popup-xl" id="popup-fine">
+            <div class="popup-header">
+                <h3>Thanh toán phí phạt</h3>
+                <button class="popup-close" onclick="closePopup()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="popup-content">
+                <div class="info-user-box">
+                    <label>Người dùng</label>
+                    <strong>Trần Thị Bình</strong>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="table no-margin sm-font">
+                        <thead>
+                            <tr>
+                                <th>Mã sách</th>
+                                <th>Tên sách</th>
+                                <th>Loại phạt</th>
+                                <th>Lý do</th>
+                                <th>Số tiền</th>
+                                <th>Ngày tạo</th>
+                                <th>Mã phiếu mượn</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>KT001</td>
+                                <td>Kinh tế học vi mô</td>
+                                <td><span class="badge badge-light-blue">Trễ hạn</span></td>
+                                <td>Quá hạn 5 ngày</td>
+                                <td class="text-red font-weight-bold">50.000đ</td>
+                                <td>18/1/2026</td>
+                                <td>KT001</td>
+                                <td><span class="badge badge-orange-solid">Chưa thanh toán</span></td>
+                            </tr>
+                            <tr>
+                                <td>KT001</td>
+                                <td>Kinh tế học vi mô</td>
+                                <td><span class="badge badge-light-orange">Hư hỏng</span></td>
+                                <td>Rách bìa sách</td>
+                                <td class="text-red font-weight-bold">80.000đ</td>
+                                <td>18/1/2026</td>
+                                <td>KT001</td>
+                                <td><span class="badge badge-orange-solid">Chưa thanh toán</span></td>
+                            </tr>
+                            <tr>
+                                <td>KT001</td>
+                                <td>Kinh tế học vi mô</td>
+                                <td><span class="badge badge-light-red">Đền sách</span></td>
+                                <td>Mất sách</td>
+                                <td class="text-red font-weight-bold">500.000đ</td>
+                                <td>18/1/2026</td>
+                                <td>KT001</td>
+                                <td><span class="badge badge-orange-solid">Chưa thanh toán</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-group mt-3 payment-methods-box">
+                    <label style="font-size: 15px; font-weight: 700; margin-bottom: 15px;">Phương thức thanh
+                        toán</label>
+                    <div class="radio-group payment-radio">
+                        <label class="radio-label checked-box">
+                            <input type="radio" name="payment" checked> <span>Tiền mặt</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="payment"> <span>Chuyển khoản</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="total-bar">
+                    <span class="lbl">Tổng tiền</span>
+                    <span class="total-amount">630.000đ</span>
+                </div>
+            </div>
+            <div class="popup-footer center-footer">
+                <button class="btn btn-outline" onclick="closePopup()">Hủy</button>
+                <button class="btn btn-orange" onclick="confirmAction('Xác nhận thanh toán thành công')">Xác
+                    nhận</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <!-- <script src="assets/js/script.js"></script> -->
+</body>
+
+</html>

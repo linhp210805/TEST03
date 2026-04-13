@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý sách - Thư viện DUE</title>
+    <link rel="stylesheet" href="../../../assets/css/book.css">
+    <link rel="stylesheet" href="../../../assets/css/sidebar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <aside id="app-sidebar" class="sidebar"></aside>
+
+        <!-- MAIN -->
+        <main class="main-content data-page">
+
+            <!-- HEADER -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 id="pageTitle">Quản lý sách</h1>
+                    <p>Đại học Kinh tế - Đại học Đà Nẵng</p>
+                </div>
+
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-details">
+                            <span class="user-name">Nguyễn Văn An</span>
+                            <span class="user-role">Thủ thư</span>
+                        </div>
+                        <div class="user-avatar">N</div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="search-section search-uniform card">
+                <p class="section-label">Tìm kiếm sách</p>
+                <div class="search-bar">
+                    <div class="input-with-icon">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="searchInput" placeholder="Nhập từ khóa tìm kiếm..."
+                            onkeyup="searchBook()">
+                    </div>
+                    <button id="bookSearchBtn" class="btn btn-primary btn-orange" type="button" onclick="searchBook()"><i
+                            class='bx bx-search'></i> Tìm kiếm</button>
+                    <button id="bookAddBtn" class="btn btn-primary btn-blue" type="button" onclick="openAddModal()"><i
+                            class='bx bx-plus'></i> Thêm sách mới</button>
+                </div>
+            </section>
+
+            <section class="table-section card data-panel">
+                <p class="section-label">Danh sách sách</p>
+                <p id="bookCount" class="section-meta">Hiển thị 6 quyển sách</p>
+                <div class="table-wrapper data-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã sách</th>
+                                <th>Tên sách</th>
+                                <th>Tác giả</th>
+                                <th>Thể loại</th>
+                                <th>NXB</th>
+                                <th>Năm XB</th>
+                                <th>Số lượng</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="bookModal" class="modal">
+        <div class="modal-content form-box">
+            <h2 id="modalTitle">Thêm sách mới</h2>
+            <form id="bookForm">
+                <input type="hidden" id="editIndex" value="-1">
+                <div class="form-group"><label>Mã sách</label><input type="text" id="bookId" required></div>
+                <div class="form-group"><label>Tên sách</label><input type="text" id="bookTitle" required></div>
+                <div class="form-group"><label>Tác giả</label><input type="text" id="bookAuthor" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Thể loại</label><input type="text" id="bookType"></div>
+                    <div class="form-group"><label>NXB</label><input type="text" id="bookPublisher"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Năm XB</label><input type="number" id="bookYear"></div>
+                    <div class="form-group"><label>Số lượng</label><input type="text" id="bookQty"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-save">Lưu thông tin</button>
+                    <button type="button" class="btn-cancel" onclick="handleCancelClick()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="detailModal" class="modal">
+        <div class="modal-content confirm-box">
+            <h2>Thông tin chi tiết</h2>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            <div id="bookDetailContent" style="text-align: left; line-height: 1.8; color: #4A5568;">
+            </div>
+            <div class="modal-footer" style="margin-top: 25px;">
+                <button class="btn-blue" style="width: 100%; justify-content: center;"
+                    onclick="closeSubModal('detailModal')">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cancelConfirmModal" class="modal sub-modal">
+        <div class="modal-content confirm-box">
+            <h3 id="cancelTitle">Xác nhận hủy?</h3>
+            <p>Hành động này sẽ xóa các thông tin sách đã nhập</p>
+            <div class="confirm-buttons">
+                <button class="btn-white" onclick="closeSubModal('cancelConfirmModal')">Hủy</button>
+                <button class="btn-orange-confirm" onclick="confirmCancel()">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteConfirmModal" class="modal sub-modal">
+        <div class="modal-content confirm-box">
+            <h3>Bạn có chắc chắn muốn xóa?</h3>
+            <p>Hành động này sẽ xóa sách khỏi hệ thống.</p>
+            <p class="warning-text">Lưu ý: Sách đã có lịch sử mượn, sẽ được chuyển sang trạng thái “Ngừng sử dụng”.</p>
+            <div class="confirm-buttons vertical">
+                <button class="btn-orange-confirm" onclick="confirmDelete()">Đồng ý</button>
+                <button class="btn-white" onclick="closeSubModal('deleteConfirmModal')">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer"></div>
+    <script src="../../../assets/js/ui.js"></script>
+    <script src="../../../assets/js/sidebar.js"></script>
+    <script src="../../../assets/js/book.js"></script>
+</body>
+
+</html>

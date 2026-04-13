@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quản lý mượn sách - Thư viện DUE</title>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="../../../style.css">
+	<link rel="stylesheet" href="../../../assets/css/sidebar.css">
+	<style>
+		/* ═══ TABLE ═══ */
+		table.table { width:100%; border-collapse:separate; border-spacing:0; font-size:14px; }
+		table.table th {
+			position:sticky; top:0; z-index:10;
+			padding:13px 16px; font-size:12px; font-weight:600; color:#6b7280;
+			background:#f9fafb; text-transform:uppercase; letter-spacing:.05em;
+			border-bottom:1px solid #e5e7eb; white-space:nowrap; text-align:left;
+		}
+		table.table td {
+			padding:14px 16px; font-size:14px; font-weight:500; color:#374151;
+			vertical-align:middle; border-bottom:1px solid #f3f4f6; white-space:nowrap;
+		}
+		table.table tbody tr:last-child td { border-bottom:none; }
+		table.table tbody tr:hover td { background:#f9fafb; cursor:pointer; }
+		th.col-action, td.col-action { text-align:right!important; white-space:nowrap; padding-right:20px!important; }
+		.data-table-scroll { overflow:auto; border-radius:8px; border:1px solid #e5e7eb; }
+
+		/* badges */
+		.tbadge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; white-space:nowrap; }
+		.tb-blue   { background:#3b82f6; color:#fff; }
+		.tb-orange { background:#f97316; color:#fff; }
+		.tb-green  { background:#22c55e; color:#fff; }
+
+		/* icon action buttons */
+		.icon-btn {
+			display:inline-flex; align-items:center; justify-content:center;
+			width:32px; height:32px; border-radius:6px; border:1px solid #e5e7eb;
+			background:#fff; cursor:pointer; font-size:16px; color:#6b7280; transition:all .2s;
+		}
+		.icon-btn.edit:hover  { background:#eff6ff; color:#3b82f6; border-color:#bfdbfe; }
+		.icon-btn.del:hover   { background:#fef2f2; color:#ef4444; border-color:#fecaca; }
+
+		/* ═══════════════════════════════════════
+		   POPUP SYSTEM
+		═══════════════════════════════════════ */
+		.pm-overlay {
+			position:fixed; inset:0; background:rgba(0,0,0,.5);
+			z-index:1000; display:none; align-items:center; justify-content:center;
+		}
+		.pm-overlay.open { display:flex; }
+
+		/* Large modal (add / extend-large / detail) */
+		.pm-modal {
+			background:#fff; border-radius:16px;
+			box-shadow:0 25px 70px rgba(0,0,0,.18);
+			width:min(740px,96vw); max-height:90vh;
+			display:none; flex-direction:column; overflow:hidden;
+		}
+
+		/* Small modal (gia hạn small / delete) */
+		.pm-modal-sm {
+			background:#fff; border-radius:16px;
+			box-shadow:0 25px 70px rgba(0,0,0,.18);
+			width:min(520px,96vw); max-height:90vh;
+			display:none; flex-direction:column; overflow:hidden;
+		}
+
+		/* title block (large popups – no X) */
+		.pm-title-block { padding:28px 32px 4px; }
+		.pm-title { font-size:22px; font-weight:700; color:#111827; margin:0; }
+
+		/* header (small popups – has X) */
+		.pm-header-sm {
+			display:flex; justify-content:space-between; align-items:flex-start;
+			padding:22px 24px 16px; border-bottom:1px solid #f3f4f6;
+		}
+		.pm-header-sm .pm-title { font-size:18px; }
+		.pm-subtitle { font-size:13px; color:#9ca3af; margin:3px 0 0; }
+		.pm-x-btn {
+			background:transparent; border:none; cursor:pointer;
+			color:#9ca3af; font-size:22px; padding:0; line-height:1;
+		}
+		.pm-x-btn:hover { color:#374151; }
+
+		/* scrollable body */
+		.pm-body { padding:20px 32px 0; overflow-y:auto; flex:1; }
+		.pm-body-sm { padding:20px 24px 0; overflow-y:auto; flex:1; }
+
+		/* 4-col grid */
+		.pm-grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:22px; }
+
+		/* form field */
+		.pm-field {}
+		.pm-label {
+			display:block; font-size:12px; font-weight:600; color:#6b7280;
+			margin-bottom:6px; letter-spacing:.02em;
+		}
+		.req { color:#ef4444; }
+		.pm-input {
+			width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:8px;
+			font-size:14px; color:#111827; background:#fff; outline:none;
+			font-family:inherit; box-sizing:border-box; transition:border-color .2s;
+		}
+		.pm-input:focus { border-color:#3b82f6; }
+		.pm-input[readonly] { background:#f3f4f6; color:#6b7280; cursor:default; }
+
+		/* ── Book INPUT rows (add popup) ── */
+		.pm-book-col-labels {
+			display:grid; grid-template-columns:28% 1fr 16% 5%;
+			gap:12px; margin-bottom:8px;
+		}
+		.pm-book-col-labels span { font-size:12px; font-weight:600; color:#9ca3af; }
+		.pm-book-row {
+			display:grid; grid-template-columns:28% 1fr 16% 5%;
+			gap:12px; margin-bottom:10px; align-items:center;
+		}
+		.pm-book-row .pm-input {}
+		.btn-row-del {
+			background:transparent; border:none; cursor:pointer;
+			color:#ef4444; font-size:22px; display:flex;
+			align-items:center; justify-content:center; padding:0; line-height:1;
+		}
+		.btn-row-del:hover { color:#b91c1c; }
+
+		/* Dashed "Thêm dòng mới" */
+		.btn-add-dashed {
+			width:100%; padding:13px; border:2px dashed #93c5fd; border-radius:8px;
+			background:transparent; color:#3b82f6; font-size:14px; font-weight:600;
+			cursor:pointer; text-align:center; transition:all .2s; margin-bottom:16px;
+			font-family:inherit;
+		}
+		.btn-add-dashed:hover { background:#eff6ff; border-color:#3b82f6; }
+
+		/* ── Book LIST rows (readonly – detail / extend-large) ── */
+		.pm-list-hdr {
+			display:grid; grid-template-columns:26% 1fr 18%;
+			padding-bottom:10px; border-bottom:1px solid #e5e7eb; margin-bottom:4px;
+		}
+		.pm-list-hdr span { font-size:13px; font-weight:600; color:#9ca3af; }
+		.pm-list-row {
+			display:grid; grid-template-columns:26% 1fr 18%;
+			padding:14px 0; border-bottom:1px solid #f3f4f6; align-items:center;
+		}
+		.pm-list-row:last-child { border-bottom:none; }
+		.pm-list-row .lcode  { font-weight:700; color:#111827; font-size:14px; }
+		.pm-list-row .ltitle { color:#374151; font-size:14px; }
+		.pm-list-row .lqty   { color:#374151; font-size:14px; }
+
+		/* ── Footer ── */
+		.pm-footer {
+			display:flex; justify-content:flex-end; gap:12px;
+			padding:16px 32px 28px; border-top:1px solid #f3f4f6; margin-top:16px;
+		}
+		.pm-footer-sm {
+			display:flex; justify-content:flex-end; gap:12px;
+			padding:16px 24px 24px; border-top:1px solid #f3f4f6; margin-top:16px;
+		}
+		.pm-footer-del { border-top:none; margin-top:4px; padding-top:0; }
+
+		.btn-cancel {
+			padding:10px 28px; border:1.5px solid #e5e7eb; border-radius:8px;
+			background:#fff; font-size:14px; font-weight:600; color:#374151;
+			cursor:pointer; font-family:inherit; transition:background .15s;
+		}
+		.btn-cancel:hover { background:#f9fafb; }
+		.btn-save {
+			padding:10px 28px; border:none; border-radius:8px; background:#1d4ed8;
+			color:#fff; font-size:14px; font-weight:600; cursor:pointer;
+			font-family:inherit; transition:background .15s;
+		}
+		.btn-save:hover { background:#1e40af; }
+		.btn-danger {
+			padding:10px 28px; border:none; border-radius:8px; background:#ef4444;
+			color:#fff; font-size:14px; font-weight:600; cursor:pointer;
+			font-family:inherit; transition:background .15s;
+		}
+		.btn-danger:hover { background:#dc2626; }
+
+		/* ── Small popup info grid ── */
+		.pm-info-grid {
+			display:grid; grid-template-columns:1fr 1fr;
+			gap:14px 24px; margin-bottom:18px;
+		}
+		.pm-info-label { font-size:12px; color:#9ca3af; font-weight:500; margin-bottom:3px; }
+		.pm-info-value { font-size:15px; font-weight:700; color:#111827; }
+
+		/* ── Delete confirm text ── */
+		.del-title { font-size:16px; font-weight:700; color:#111827; margin:0 0 8px; }
+		.del-text  { font-size:14px; color:#6b7280; margin:0; line-height:1.6; }
+
+		/* ── Keep button metrics identical with book-list page ── */
+		#borrowSearchBtn,
+		#addBorrowBtn {
+			height: 44px;
+			font-family: 'Inter', sans-serif;
+			font-size: 14px;
+			font-weight: 600;
+			line-height: 1;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+		}
+
+		#borrowSearchBtn { width: 152px; }
+		#addBorrowBtn { width: 184px; }
+	</style>
+</head>
+
+<body>
+<div class="dashboard-container">
+	<aside id="app-sidebar" class="sidebar"></aside>
+
+	<main class="main-content data-page">
+		<header class="header">
+			<div class="header-left">
+				<h1>Quản lý mượn sách</h1>
+				<p>Đại học Kinh tế - Đại học Đà Nẵng</p>
+			</div>
+			<div class="header-right">
+				<div class="user-info">
+					<div class="user-details">
+						<span class="user-name">Nguyễn Văn An</span>
+						<span class="user-role">Thủ thư</span>
+					</div>
+					<div class="user-avatar">N</div>
+				</div>
+			</div>
+		</header>
+
+		<section class="search-section search-uniform card">
+			<p class="section-label">Tìm kiếm phiếu mượn</p>
+			<div class="search-bar">
+				<div class="input-with-icon">
+					<i class='bx bx-search'></i>
+					<input id="borrowSearchInput" type="text" aria-label="Tìm phiếu mượn" placeholder="Nhập thông tin để tìm kiếm">
+				</div>
+				<button id="borrowSearchBtn" class="btn btn-primary btn-orange" type="button">
+					<i class='bx bx-search'></i> Tìm kiếm
+				</button>
+				<button id="addBorrowBtn" class="btn btn-primary btn-blue" type="button">
+					<i class='bx bx-plus'></i> Thêm phiếu mượn
+				</button>
+			</div>
+		</section>
+
+		<section class="card data-panel">
+			<p class="section-label">Danh sách phiếu mượn</p>
+			<div class="data-table-scroll">
+				<table id="borrowTable" class="table">
+					<colgroup>
+						<col style="width:14%"><col style="width:16%"><col style="width:20%">
+						<col style="width:12%"><col style="width:12%"><col style="width:13%"><col style="width:13%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>Mã phiếu mượn</th>
+							<th>Mã người dùng</th>
+							<th>Tên người dùng</th>
+							<th>Ngày mượn</th>
+							<th>Ngày đến hạn</th>
+							<th>Tình trạng</th>
+							<th class="col-action">Thao tác</th>
+						</tr>
+					</thead>
+					<tbody id="borrowTableBody"></tbody>
+				</table>
+			</div>
+		</section>
+	</main>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     POPUP OVERLAY
+═══════════════════════════════════════════════════════ -->
+<div id="pmOverlay" class="pm-overlay">
+
+	<!-- ① THÊM PHIẾU MƯỢN ─────────────────────────────── -->
+	<div class="pm-modal" id="popup-add-borrow">
+		<div class="pm-title-block">
+			<h3 class="pm-title">Thêm phiếu mượn</h3>
+		</div>
+		<div class="pm-body">
+			<form id="borrowForm" onsubmit="submitAddBorrow(event)">
+				<div class="pm-grid-4">
+					<div class="pm-field">
+						<label class="pm-label">Mã người dùng <span class="req">*</span></label>
+						<input id="addUserId" class="pm-input" type="text" placeholder="VD: 2051010001" required>
+					</div>
+					<div class="pm-field">
+						<label class="pm-label">Tên người dùng</label>
+						<input id="addUserName" class="pm-input" type="text" placeholder="Tự động điền" readonly>
+					</div>
+					<div class="pm-field">
+						<label class="pm-label">Ngày mượn <span class="req">*</span></label>
+						<input id="addBorrowDate" class="pm-input" type="date" required>
+					</div>
+					<div class="pm-field">
+						<label class="pm-label">Ngày đến hạn trả <span class="req">*</span></label>
+						<input id="addDueDate" class="pm-input" type="date" required>
+					</div>
+				</div>
+
+				<div class="pm-book-col-labels">
+					<span>Mã sách trong kho <span class="req">*</span></span>
+					<span>Tên sách</span>
+					<span>Số lượng</span>
+					<span></span>
+				</div>
+				<div id="addBooksBody"></div>
+
+				<button class="btn-add-dashed" type="button" onclick="addBookRow()">+ Thêm dòng mới</button>
+			</form>
+		</div>
+		<div class="pm-footer">
+			<button class="btn-cancel" type="button" onclick="closePm()">Hủy</button>
+			<button class="btn-save" type="submit" form="borrowForm">Lưu phiếu mượn</button>
+		</div>
+	</div>
+
+	<!-- ② GIA HẠN NGÀY TRẢ SÁCH (large) ──────────────── -->
+	<div class="pm-modal" id="popup-extend-large">
+		<div class="pm-title-block">
+			<h3 class="pm-title">Gia hạn ngày trả sách</h3>
+		</div>
+		<div class="pm-body">
+			<div class="pm-grid-4">
+				<div class="pm-field">
+					<label class="pm-label">Mã người dùng</label>
+					<input id="extLgUserId" class="pm-input" type="text" readonly>
+				</div>
+				<div class="pm-field">
+					<label class="pm-label">Tên người dùng</label>
+					<input id="extLgUserName" class="pm-input" type="text" readonly>
+				</div>
+				<div class="pm-field">
+					<label class="pm-label">Ngày đến hạn trả</label>
+					<input id="extLgCurrentDue" class="pm-input" type="date" readonly>
+				</div>
+				<div class="pm-field">
+					<label class="pm-label">Ngày đến hạn trả mới (có thể chỉnh trực tiếp) <span class="req">*</span></label>
+					<input id="extLgNewDue" class="pm-input" type="date">
+				</div>
+			</div>
+			<div class="pm-list-hdr">
+				<span>Mã sách trong kho</span>
+				<span>Tên sách</span>
+				<span>Số lượng</span>
+			</div>
+			<div id="extLgBooksBody"></div>
+		</div>
+		<div class="pm-footer">
+			<button class="btn-cancel" type="button" onclick="closePm()">Hủy</button>
+			<button class="btn-save" type="button" onclick="saveExtendLarge()">Lưu thay đổi</button>
+		</div>
+	</div>
+
+	<!-- ③ CHI TIẾT PHIẾU MƯỢN ─────────────────────────── -->
+	<div class="pm-modal" id="popup-borrow-detail">
+		<div class="pm-title-block">
+			<h3 class="pm-title">Chi tiết phiếu mượn</h3>
+		</div>
+		<div class="pm-body">
+			<div class="pm-grid-4">
+				<div class="pm-field">
+					<label class="pm-label">Mã người dùng</label>
+					<input id="detUserId" class="pm-input" type="text" readonly>
+				</div>
+				<div class="pm-field">
+					<label class="pm-label">Tên người dùng</label>
+					<input id="detUserName" class="pm-input" type="text" readonly>
+				</div>
+				<div class="pm-field">
+					<label class="pm-label">Ngày mượn</label>
+					<input id="detBorrowDate" class="pm-input" type="date" readonly>
+				</div>
+				<div class="pm-field">
+					<label class="pm-label">Ngày đến hạn trả</label>
+					<input id="detDueDate" class="pm-input" type="date" readonly>
+				</div>
+			</div>
+			<div class="pm-list-hdr">
+				<span>Mã sách trong kho</span>
+				<span>Tên sách</span>
+				<span>Số lượng</span>
+			</div>
+			<div id="detBooksBody"></div>
+		</div>
+		<div class="pm-footer">
+			<button class="btn-cancel" type="button" onclick="closePm()">Hủy</button>
+			<button class="btn-save" type="button" onclick="closePm()">Lưu thay đổi</button>
+		</div>
+	</div>
+
+	<!-- ④ GIA HẠN MƯỢN SÁCH (small) ──────────────────── -->
+	<div class="pm-modal-sm" id="popup-extend-small">
+		<div class="pm-header-sm">
+			<div>
+				<h3 class="pm-title">Gia hạn mượn sách</h3>
+				<p class="pm-subtitle">Cập nhật ngày gia hạn cho phiếu mượn</p>
+			</div>
+			<button class="pm-x-btn" onclick="closePm()">×</button>
+		</div>
+		<div class="pm-body-sm">
+			<div class="pm-info-grid">
+				<div>
+					<div class="pm-info-label">Mã người dùng</div>
+					<div class="pm-info-value" id="extSmUserId">–</div>
+				</div>
+				<div>
+					<div class="pm-info-label">Họ và tên</div>
+					<div class="pm-info-value" id="extSmUserName">–</div>
+				</div>
+				<div>
+					<div class="pm-info-label">Mã sách</div>
+					<div class="pm-info-value" id="extSmBookCode">–</div>
+				</div>
+				<div>
+					<div class="pm-info-label">Tên sách</div>
+					<div class="pm-info-value" id="extSmBookTitle">–</div>
+				</div>
+			</div>
+			<div class="pm-field" style="margin-bottom:4px;">
+				<label class="pm-label">Ngày gia hạn mới <span class="req">*</span></label>
+				<input id="extSmNewDate" class="pm-input" type="date">
+			</div>
+		</div>
+		<div class="pm-footer-sm">
+			<button class="btn-cancel" onclick="closePm()">Hủy</button>
+			<button class="btn-save" onclick="saveExtendSmall()">Lưu</button>
+		</div>
+	</div>
+
+	<!-- ⑤ XÁC NHẬN XÓA ────────────────────────────────── -->
+	<div class="pm-modal-sm" id="popup-delete-confirm">
+		<div style="padding:28px 28px 0;">
+			<p class="del-title">Bạn có muốn xóa?</p>
+			<p class="del-text">Hành động này sẽ xóa phiếu mượn khỏi hệ thống. Bạn không thể hoàn tác sau khi xác nhận.</p>
+		</div>
+		<div class="pm-footer-sm pm-footer-del" style="margin-top:24px; padding-top:0; border-top:none;">
+			<button class="btn-cancel" onclick="closePm()">Hủy</button>
+			<button class="btn-danger" onclick="confirmDelete()">Đồng ý</button>
+		</div>
+	</div>
+
+</div><!-- /pm-overlay -->
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="../../../assets/js/ui.js"></script>
+<script src="../../../assets/js/borrow.js"></script>
+<script src="../../../assets/js/sidebar.js"></script>
+</body>
+</html>

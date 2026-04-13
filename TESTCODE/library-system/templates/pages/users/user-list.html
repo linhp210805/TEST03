@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý người dùng - Thư viện DUE</title>
+    <link rel="stylesheet" href="../../../assets/css/user.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../../assets/css/sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside id="app-sidebar" class="sidebar"></aside>
+
+        <main class="main-content data-page">
+            <header class="header">
+                <div class="header-left">
+                    <h1>Quản lý người dùng</h1>
+                    <p>Đại học Kinh tế - Đại học Đà Nẵng</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-details">
+                            <span class="user-name">Nguyễn Văn An</span>
+                            <span class="user-role">Thủ thư</span>
+                        </div>
+                        <div class="user-avatar">N</div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="search-section">
+                <h3>Tra cứu người dùng</h3>
+                <p>Tìm kiếm và lọc danh sách người dùng</p>
+                
+                <div class="search-controls">
+                    <div class="search-input-group">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchInput" placeholder="Nhập thông tin để tìm kiếm">
+                    </div>
+                    <button id="searchBtn" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</button>
+                </div>
+                
+                <div class="filter-controls">
+                    <div class="custom-select">
+                        <select id="filterStatus">
+                            <option value="all">Tất cả (Tình trạng)</option>
+                            <option value="Chưa tốt nghiệp">Chưa tốt nghiệp</option>
+                            <option value="Đã tốt nghiệp">Đã tốt nghiệp</option>
+                        </select>
+                    </div>
+                    <div class="custom-select">
+                        <select id="filterClass">
+                            <option value="all">Tất cả (Lớp)</option>
+                            <option value="20K1">20K1</option>
+                            <option value="20K2">20K2</option>
+                            <option value="19K3">19K3</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="table-section data-panel">
+                <h3>Danh sách người dùng</h3>
+                <div class="table-container data-table-scroll">
+                    <table id="userTable">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Mã người dùng</th>
+                                <th>Họ tên</th>
+                                <th>Loại</th>
+                                <th>Lớp</th>
+                                <th>TN</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        Không tìm thấy người dùng phù hợp
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="userModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Chi tiết người dùng</h2>
+            
+            <div class="user-details-grid">
+                <div class="detail-box">
+                    <label>Mã người dùng</label>
+                    <div class="detail-value" id="modalUserId">12345678</div>
+                </div>
+                <div class="detail-box">
+                    <label>Họ tên</label>
+                    <div class="detail-value" id="modalUserName">Nguyễn Văn An</div>
+                </div>
+                <div class="detail-box">
+                    <label>Email</label>
+                    <div class="detail-value" id="modalUserEmail">nvana@due.edu.vn</div>
+                </div>
+                <div class="detail-box">
+                    <label>Số điện thoại</label>
+                    <div class="detail-value" id="modalUserPhone">0905123456</div>
+                </div>
+            </div>
+
+            <div class="status-panel">
+                <div class="status-header">Tình trạng</div>
+                <div class="status-body">
+                    <div class="status-item">
+                        <div class="icon-box blue"><i class="fa-solid fa-book"></i></div>
+                        <div>
+                            <span class="status-label">Số sách đang mượn</span>
+                            <span class="status-number blue-text" id="modalBooks">0</span>
+                        </div>
+                    </div>
+                    <div class="status-divider"></div>
+                    <div class="status-item">
+                        <div class="icon-box orange"><i class="fa-solid fa-receipt"></i></div>
+                        <div>
+                            <span class="status-label">Tiền phạt còn nợ</span>
+                            <span class="status-number orange-text" id="modalFine">0đ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="closeModalBtn" class="btn btn-primary">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../assets/js/sidebar.js"></script>
+    <script src="../../../assets/js/user.js"></script>
+</body>
+</html>

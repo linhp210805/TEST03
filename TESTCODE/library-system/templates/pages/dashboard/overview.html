@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng quan - Thư viện DUE</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+<div class="dashboard-container" id="dashboardPage">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-text">DUE</span>
+            </div>
+            <h2>Thư viện DUE</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li class="active" id="nav-overview">
+                <a href="../../../index.html">
+                    <i class='bx bxs-grid-alt'></i> Tổng quan
+                </a>
+            </li>
+
+            <li>
+                <a href="../circulation/borrow.html">
+                    <i class='bx bx-book-reader'></i> Mượn sách
+                </a>
+            </li>
+
+            <li id="nav-return">
+                <a href="../circulation/returns.html">
+                    <i class='bx bx-history'></i> Trả sách
+                </a>
+            </li>
+
+            <li>
+                <a href="../books/book-list.html">
+                    <i class='bx bx-book'></i> Quản lý sách
+                </a>
+            </li>
+
+            <li>
+                <a href="../users/user-list.html">
+                    <i class='bx bx-group'></i> Người dùng
+                </a>
+            </li>
+
+            <li>
+                <a href="../reports/statistics.html">
+                    <i class='bx bx-line-chart'></i> Báo cáo
+                </a>
+            </li>
+        </ul>
+
+        <div class="logout-wrapper">
+            <a href="../../../index.html" class="logout-btn">
+                <i class='bx bx-log-out'></i> Đăng xuất
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-left">
+                <h1 id="pageTitle">Tổng quan</h1>
+                <p>Đại học Kinh tế - Đại học Đà Nẵng</p>
+            </div>
+
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="user-details">
+                        <span class="user-name">Nguyễn Văn An</span>
+                        <span class="user-role">Thủ thư</span>
+                    </div>
+                    <div class="user-avatar">N</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- OVERVIEW PAGE -->
+        <div id="page-overview">
+
+            <!-- CARDS -->
+            <section class="overview-cards">
+
+                <div class="card card-blue">
+                    <div class="card-content">
+                        <p class="card-title">Tổng số sách <i class='bx bx-book-bookmark'></i></p>
+                        <h3>61</h3>
+                        <p class="card-desc">49 sách còn trong kho</p>
+                    </div>
+                </div>
+
+                <div class="card card-blue">
+                    <div class="card-content">
+                        <p class="card-title">Sách đang mượn <i class='bx bx-book-open'></i></p>
+                        <h3>3</h3>
+                        <p class="card-desc">1 phiếu quá hạn</p>
+                    </div>
+                </div>
+
+                <div class="card card-blue">
+                    <div class="card-content">
+                        <p class="card-title">Tổng độc giả <i class='bx bx-group'></i></p>
+                        <h3>4</h3>
+                        <p class="card-desc">Đang hoạt động</p>
+                    </div>
+                </div>
+
+                <div class="card card-red border-left-red">
+                    <div class="card-content">
+                        <p class="card-title">Phiếu quá hạn <i class='bx bx-calendar-x'></i></p>
+                        <h3 class="text-red">1</h3>
+                        <p class="card-desc">Cần xử lý</p>
+                    </div>
+                </div>
+
+                <div class="card card-red border-left-red">
+                    <div class="card-content">
+                        <p class="card-title">Tiền phạt chưa thu <i class='bx bx-money'></i></p>
+                        <h3 class="text-red">50.000đ</h3>
+                        <p class="card-desc">Cần thu</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- CHARTS -->
+            <section class="charts-section">
+                <h2>Biểu đồ nhanh</h2>
+
+                <div class="charts-grid">
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <span class="title">Trạng thái sách</span>
+                            <span class="subtitle">Kho vs Đang mượn</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="booksStatusChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <span class="title">Độc giả</span>
+                            <span class="subtitle">Hoạt động</span>
+                        </div>
+                        <div class="chart-wrapper" style="position: relative;">
+                            <canvas id="readersChart"></canvas>
+                            <div class="donut-inner">
+                                <span class="num">4</span>
+                                <span>Đang hoạt động</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <span class="title">Xu hướng quá hạn</span>
+                            <span class="subtitle">7 ngày</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="overdueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <span class="title">Tiền phạt</span>
+                            <span class="subtitle">Đã thu vs Chưa thu</span>
+                        </div>
+
+                        <div class="progress-section">
+
+                            <div class="progress-item text-red">
+                                <div class="prog-label">
+                                    <span>Chưa thu</span>
+                                    <strong>50.000đ</strong>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress bg-red" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="progress-item text-blue">
+                                <div class="prog-label">
+                                    <span>Đã thu</span>
+                                    <strong>0đ</strong>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress bg-blue" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <p class="target-desc">Mục tiêu: thu toàn bộ trong tuần</p>
+
+                            <div class="legend-inline">
+                                <span><span class="dot dot-red"></span> Chưa thu</span>
+                                <span><span class="dot dot-gray"></span> Đã thu</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

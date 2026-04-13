@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Báo cáo - Thư viện DUE</title>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<link rel="stylesheet" href="../../../style.css">
+	<link rel="stylesheet" href="../../../assets/css/sidebar.css">
+	<style>
+		.data-page {
+			overflow-y: auto !important;
+		}
+
+		/* ══ MAIN TAB BAR (pill style - giống returns) ══ */
+		.main-tabs {
+			display: flex;
+			gap: 10px;
+			background: #fff;
+			border-radius: 12px;
+			padding: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+			border: 1px solid #e5e7eb;
+			margin-bottom: 20px;
+		}
+
+		.main-tab-btn {
+			flex: 1;
+			text-align: center;
+			padding: 12px 16px;
+			border-radius: 8px;
+			font-size: 14px;
+			font-weight: 600;
+			color: #374151;
+			cursor: pointer;
+			border: none;
+			background: transparent;
+			transition: all 0.25s;
+			white-space: nowrap;
+		}
+
+		.main-tab-btn:hover {
+			background: #f3f4f6;
+		}
+
+		.main-tab-btn.active {
+			background: #f97316;
+			color: #fff;
+			box-shadow: 0 4px 6px rgba(249, 115, 22, 0.25);
+		}
+
+		.main-panel {
+			display: none;
+		}
+
+		.main-panel.active {
+			display: block;
+		}
+
+		/* ══ SEARCH ROW (single line input + filter btn) ══ */
+		.report-search-row {
+			display: flex;
+			gap: 10px;
+			align-items: center;
+			margin-bottom: 14px;
+		}
+
+		.report-search-row .input-with-icon {
+			position: relative;
+			flex: 1;
+		}
+
+		.report-search-row .input-with-icon i {
+			position: absolute;
+			left: 12px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #9ca3af;
+			font-size: 16px;
+			pointer-events: none;
+		}
+
+		.report-search-row input {
+			width: 100%;
+			height: 38px;
+			padding: 0 14px 0 36px;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			font-size: 13px;
+			outline: none;
+			color: #111827;
+			font-family: inherit;
+		}
+
+		.report-search-row input:focus {
+			border-color: #3b82f6;
+		}
+
+		.btn-filter {
+			height: 38px;
+			padding: 0 16px;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			background: #fff;
+			font-size: 13px;
+			font-weight: 600;
+			color: #374151;
+			cursor: pointer;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			white-space: nowrap;
+			transition: background .2s;
+		}
+
+		.btn-filter:hover {
+			background: #f3f4f6;
+		}
+
+		/* ══ STATS LINE ══ */
+		.stats-line {
+			display: flex;
+			gap: 28px;
+			align-items: center;
+			margin-bottom: 14px;
+			font-size: 13.5px;
+			color: #6b7280;
+		}
+
+		.stats-line .sl-item {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		.stats-line .sl-item strong {
+			font-size: 15px;
+			font-weight: 700;
+			color: #111827;
+		}
+
+		.stats-line .sl-item strong.green {
+			color: #16a34a;
+		}
+
+		.stats-line .sl-item strong.red {
+			color: #ef4444;
+		}
+
+		/* ══ BUTTON GROUP SUB-TABS (giống ảnh - có border) ══ */
+		.btn-group-tabs {
+			display: flex;
+			gap: 0;
+			margin-bottom: 16px;
+		}
+
+		.btn-group-tab {
+			padding: 8px 20px;
+			font-size: 13.5px;
+			font-weight: 600;
+			color: #374151;
+			background: #fff;
+			border: 1px solid #d1d5db;
+			cursor: pointer;
+			transition: all .2s;
+			white-space: nowrap;
+		}
+
+		.btn-group-tab:first-child {
+			border-radius: 8px 0 0 8px;
+		}
+
+		.btn-group-tab:last-child {
+			border-radius: 0 8px 8px 0;
+		}
+
+		.btn-group-tab:not(:last-child) {
+			border-right: none;
+		}
+
+		.btn-group-tab:hover {
+			background: #f9fafb;
+		}
+
+		.btn-group-tab.active {
+			background: #fff;
+			border-color: #374151;
+			color: #111827;
+			z-index: 1;
+			position: relative;
+			box-shadow: inset 0 0 0 1px #374151;
+		}
+
+		.sub-panel {
+			display: none;
+		}
+
+		.sub-panel.active {
+			display: block;
+		}
+
+		/* ══ REPORT TABLES ══ */
+		.report-table-wrap {
+			border: 1px solid #e5e7eb;
+			border-radius: 10px;
+			overflow: hidden;
+			overflow-x: auto;
+		}
+
+		.report-table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 13.5px;
+		}
+
+		.report-table th {
+			background: #f9fafb;
+			padding: 11px 14px;
+			text-align: left;
+			font-size: 12px;
+			font-weight: 700;
+			color: #6b7280;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+			border-bottom: 1px solid #e5e7eb;
+			white-space: nowrap;
+		}
+
+		.report-table td {
+			padding: 13px 14px;
+			border-bottom: 1px solid #f3f4f6;
+			color: #374151;
+			font-weight: 500;
+			vertical-align: middle;
+			white-space: nowrap;
+		}
+
+		.report-table tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.report-table tbody tr:hover td {
+			background: #f9fafb;
+		}
+
+		.report-table td strong {
+			font-weight: 700;
+			color: #111827;
+		}
+
+		/* badges */
+		.rbadge {
+			display: inline-block;
+			padding: 4px 13px;
+			border-radius: 20px;
+			font-size: 12px;
+			font-weight: 700;
+			white-space: nowrap;
+		}
+
+		.rb-stock {
+			background: #1d4ed8;
+			color: #fff;
+		}
+
+		.rb-late {
+			background: #fff1f2;
+			color: #e11d48;
+			border: 1px solid #fecdd3;
+		}
+
+		.rb-paid {
+			background: #1d4ed8;
+			color: #fff;
+		}
+
+		.rb-unpaid {
+			background: #f97316;
+			color: #fff;
+		}
+
+		.rb-blue {
+			background: #eff6ff;
+			color: #3b82f6;
+		}
+
+		.rb-orange {
+			background: #fff7ed;
+			color: #f97316;
+		}
+
+		.fine-amount {
+			color: #ef4444;
+			font-weight: 700;
+		}
+
+		/* ══ FINE SUMMARY SECTION ══ */
+		.fine-summary-heading {
+			font-size: 15px;
+			font-weight: 700;
+			color: #111827;
+			margin: 20px 0 12px;
+		}
+
+		.fine-summary-grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 12px;
+		}
+
+		.fine-card {
+			background: #fff;
+			border: 1px solid #e5e7eb;
+			border-radius: 10px;
+			padding: 16px 18px;
+		}
+
+		.fine-card .fc-label {
+			font-size: 12px;
+			color: #9ca3af;
+			margin-bottom: 6px;
+			font-weight: 500;
+		}
+
+		.fine-card .fc-value {
+			font-size: 18px;
+			font-weight: 700;
+			color: #111827;
+		}
+
+		/* ===== Visual refresh (scoped) ===== */
+		.data-page {
+			padding-bottom: 28px;
+			background: linear-gradient(180deg, #f8fafc 0%, #f3f6fb 100%);
+		}
+
+		main.main-content.data-page {
+			gap: 16px;
+		}
+
+		.main-tabs {
+			padding: 10px;
+			border-radius: 14px;
+			border: 1px solid #e6ebf2;
+			box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+		}
+
+		.main-tab-btn {
+			font-size: 14px;
+			font-weight: 700;
+		}
+
+		.main-tab-btn.active {
+			background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+			box-shadow: none;
+		}
+
+		.main-panel {
+			background: #ffffff;
+			border: 1px solid #e6ebf2;
+			border-radius: 14px;
+			padding: 18px;
+			box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+		}
+
+		.header {
+			margin-bottom: 0;
+		}
+
+		.report-search-row {
+			padding: 10px;
+			background: #f8fafc;
+			border: 1px solid #e5e7eb;
+			border-radius: 12px;
+		}
+
+		.report-search-row input {
+			height: 40px;
+			border-color: #d8dee8;
+		}
+
+		.btn-filter {
+			height: 40px;
+			border-color: #d8dee8;
+			background: #fff;
+		}
+
+		.stats-line {
+			gap: 12px;
+			flex-wrap: wrap;
+			margin: 14px 0 16px;
+		}
+
+		.stats-line .sl-item {
+			padding: 10px 12px;
+			background: #f8fafc;
+			border: 1px solid #e7edf6;
+			border-radius: 10px;
+		}
+
+		.btn-group-tabs {
+			margin-bottom: 14px;
+		}
+
+		.btn-group-tab {
+			font-weight: 700;
+			background: #f9fafb;
+		}
+
+		.btn-group-tab.active {
+			background: #ffffff;
+			border-color: #1f2937;
+			box-shadow: inset 0 0 0 1px #1f2937;
+		}
+
+		.report-table-wrap {
+			border-radius: 12px;
+			border-color: #e6ebf2;
+			box-shadow: inset 0 1px 0 #eef2f7;
+		}
+
+		.report-table th {
+			background: #f4f7fb;
+			color: #4b5563;
+		}
+
+		.fine-summary-heading {
+			margin-top: 18px;
+		}
+
+		.fine-summary-grid {
+			gap: 14px;
+		}
+
+		.fine-card {
+			border: 1px solid #e8edf5;
+			border-radius: 12px;
+			box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+		}
+
+		.fine-card:nth-child(1) {
+			background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+		}
+
+		.fine-card:nth-child(2) {
+			background: linear-gradient(180deg, #fff7f7 0%, #ffffff 100%);
+		}
+
+		.fine-card:nth-child(3) {
+			background: linear-gradient(180deg, #fffaf3 0%, #ffffff 100%);
+		}
+
+		.fine-card:nth-child(4) {
+			background: linear-gradient(180deg, #f5faff 0%, #ffffff 100%);
+		}
+
+		@media (max-width: 980px) {
+
+			.fine-summary-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		@media (max-width: 640px) {
+			.main-panel {
+				padding: 14px;
+			}
+
+			.main-tabs {
+				grid-template-columns: 1fr;
+			}
+
+			.report-search-row {
+				flex-direction: column;
+				align-items: stretch;
+			}
+
+			.btn-filter {
+				width: 100%;
+				justify-content: center;
+			}
+
+			.fine-summary-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		/* Keep 2 main tabs exactly same size and avoid shifting when switching */
+		.main-tabs {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			align-items: stretch;
+			gap: 10px;
+		}
+
+		.main-tab-btn {
+			box-sizing: border-box;
+			width: 100%;
+			height: 48px;
+			min-width: 0;
+			padding: 0 12px;
+			margin: 0;
+			line-height: 1;
+			font-size: 14px;
+			font-weight: 700;
+			border: 1px solid #e2e8f0;
+			border-radius: 10px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			transform: none !important;
+			box-shadow: none !important;
+		}
+
+		.main-tab-btn.active {
+			border-color: #f97316;
+		}
+
+		.main-tab-btn:hover,
+		.main-tab-btn:focus-visible {
+			transform: none !important;
+			box-shadow: none !important;
+		}
+
+		/* Prevent layout jump when report title text length changes */
+		.header-left {
+			min-width: 0;
+			flex: 1;
+		}
+
+		#reportPageTitle {
+			display: block;
+			max-width: 520px;
+			min-height: 32px;
+			line-height: 32px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			margin-bottom: 4px;
+		}
+
+		@media (max-width: 900px) {
+			#reportPageTitle {
+				max-width: 100%;
+				min-height: 30px;
+				line-height: 30px;
+			}
+		}
+
+		/* Lock page height; only table areas are scrollable */
+		main.main-content.data-page {
+			overflow: hidden !important;
+			display: flex;
+			flex-direction: column;
+			min-height: 0;
+		}
+
+		.main-panel {
+			min-height: 0;
+		}
+
+		.main-panel.active {
+			display: flex;
+			flex-direction: column;
+			min-height: 0;
+			gap: 12px;
+		}
+
+		#panel-returned .sub-panel.active {
+			display: flex;
+			flex-direction: column;
+			flex: 1;
+			min-height: 0;
+		}
+
+		#panel-returned .report-table-wrap {
+			flex: 1;
+			min-height: 0;
+			overflow: auto;
+			scrollbar-gutter: stable;
+		}
+
+		#panel-fines .report-table-wrap {
+			max-height: 360px;
+			overflow: auto;
+			scrollbar-gutter: stable;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="dashboard-container">
+		<aside id="app-sidebar" class="sidebar"></aside>
+
+		<main class="main-content data-page">
+			<header class="header">
+				<div class="header-left">
+					<h1 id="reportPageTitle">Báo cáo sách được trả</h1>
+					<p>Đại học Kinh tế - Đại học Đà Nẵng</p>
+				</div>
+				<div class="header-right">
+					<div class="user-info">
+						<div class="user-details">
+							<span class="user-name">Nguyễn Văn An</span>
+							<span class="user-role">Thủ thư</span>
+						</div>
+						<div class="user-avatar">N</div>
+					</div>
+				</div>
+			</header>
+
+			<!-- ══ MAIN TABS ══ -->
+			<div class="main-tabs">
+				<button class="main-tab-btn active"
+					onclick="switchMainTab(this,'panel-returned','Báo cáo sách được trả')">
+					Báo cáo sách được trả
+				</button>
+				<button class="main-tab-btn" onclick="switchMainTab(this,'panel-fines','Báo cáo phí phạt')">
+					Báo cáo phí phạt
+				</button>
+			</div>
+
+			<!-- ════════════════════════════════════
+			     PANEL 1: BÁO CÁO SÁCH ĐƯỢC TRẢ
+			════════════════════════════════════ -->
+			<div id="panel-returned" class="main-panel active">
+
+				<!-- Search -->
+				<div class="report-search-row">
+					<div class="input-with-icon">
+						<i class='bx bx-search'></i>
+						<input id="returnedSearch" type="text" placeholder="Tìm kiếm"
+							oninput="filterTable('returnedSearch','returnedBody')">
+					</div>
+					<button class="btn-filter"><i class='bx bx-filter-alt'></i> Lọc</button>
+				</div>
+
+				<!-- Stats -->
+				<div class="stats-line">
+					<div class="sl-item">Tổng số sách đã trả <strong>6</strong></div>
+					<div class="sl-item">Trả đúng hạn <strong class="green">3</strong></div>
+					<div class="sl-item">Trả quá hạn <strong class="red">3</strong></div>
+				</div>
+
+				<!-- Sub-tabs -->
+				<div class="btn-group-tabs">
+					<button class="btn-group-tab" onclick="switchSubTab(this,'sub-returned')">Sách đã trả</button>
+					<button class="btn-group-tab" onclick="switchSubTab(this,'sub-borrowing')">Sách đang cho
+						mượn</button>
+					<button class="btn-group-tab active" onclick="switchSubTab(this,'sub-stock')">Sách còn trong
+						kho</button>
+				</div>
+
+				<!-- SUB: Sách đã trả -->
+				<div id="sub-returned" class="sub-panel">
+					<div class="report-table-wrap">
+						<table class="report-table">
+							<thead>
+								<tr>
+									<th>Mã phiếu</th>
+									<th>Sách</th>
+									<th>Mã sách trong kho</th>
+									<th>Số lượng</th>
+									<th>Còn lại</th>
+									<th>Trạng thái</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>PM001</td>
+									<td>Kinh tế học vi mô</td>
+									<td>KT001</td>
+									<td>30</td>
+									<td>23</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM002</td>
+									<td>Nguyên lý kế toán</td>
+									<td>TC001</td>
+									<td>40</td>
+									<td>32</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM003</td>
+									<td>Quản trị Marketing</td>
+									<td>KT002</td>
+									<td>45</td>
+									<td>36</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM004</td>
+									<td>Phân tích báo cáo tài chính</td>
+									<td>TC002</td>
+									<td>32</td>
+									<td>22</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM005</td>
+									<td>Quản trị nguồn nhân lực</td>
+									<td>QL001</td>
+									<td>75</td>
+									<td>64</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM006</td>
+									<td>Kinh tế lượng cơ bản</td>
+									<td>KT003</td>
+									<td>53</td>
+									<td>41</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- SUB: Sách đang cho mượn -->
+				<div id="sub-borrowing" class="sub-panel">
+					<div class="report-table-wrap">
+						<table class="report-table">
+							<thead>
+								<tr>
+									<th>Mã phiếu</th>
+									<th>Sách</th>
+									<th>Người mượn</th>
+									<th>Ngày mượn</th>
+									<th>Hạn trả</th>
+									<th>Trạng thái</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>PM001</td>
+									<td>Kinh tế học vi mô</td>
+									<td>Trần Thị Bình</td>
+									<td>10/1/2026</td>
+									<td>24/1/2026</td>
+									<td><span class="rbadge rb-blue">Đang mượn</span></td>
+								</tr>
+								<tr>
+									<td>PM002</td>
+									<td>Nguyên lý kế toán</td>
+									<td>Trần Lâm</td>
+									<td>10/1/2026</td>
+									<td>24/1/2026</td>
+									<td><span class="rbadge rb-orange">Quá hạn</span></td>
+								</tr>
+								<tr>
+									<td>PM003</td>
+									<td>Kinh tế vĩ mô</td>
+									<td>Nguyễn Kiệm</td>
+									<td>12/1/2026</td>
+									<td>26/1/2026</td>
+									<td><span class="rbadge rb-blue">Đang mượn</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- SUB: Sách còn trong kho -->
+				<div id="sub-stock" class="sub-panel active">
+					<div class="report-table-wrap">
+						<table class="report-table" id="stockTable">
+							<thead>
+								<tr>
+									<th>Mã phiếu</th>
+									<th>Sách</th>
+									<th>Mã sách trong kho</th>
+									<th>Số lượng</th>
+									<th>Còn lại</th>
+									<th>Trạng thái</th>
+								</tr>
+							</thead>
+							<tbody id="returnedBody">
+								<tr>
+									<td>PM001</td>
+									<td>Kinh tế học vi mô</td>
+									<td>KT001</td>
+									<td>30</td>
+									<td>23</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM002</td>
+									<td>Nguyên lý kế toán</td>
+									<td>TC001</td>
+									<td>40</td>
+									<td>32</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM003</td>
+									<td>Quản trị Marketing</td>
+									<td>KT002</td>
+									<td>45</td>
+									<td>36</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM004</td>
+									<td>Phân tích báo cáo tài chính</td>
+									<td>TC002</td>
+									<td>32</td>
+									<td>22</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM005</td>
+									<td>Quản trị nguồn nhân lực</td>
+									<td>QL001</td>
+									<td>75</td>
+									<td>64</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+								<tr>
+									<td>PM006</td>
+									<td>Kinh tế lượng cơ bản</td>
+									<td>KT003</td>
+									<td>53</td>
+									<td>41</td>
+									<td><span class="rbadge rb-stock">Còn sách</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div><!-- /panel-returned -->
+
+			<!-- ════════════════════════════════════
+			     PANEL 2: BÁO CÁO PHÍ PHẠT
+			════════════════════════════════════ -->
+			<div id="panel-fines" class="main-panel">
+
+				<!-- Search -->
+				<div class="report-search-row">
+					<div class="input-with-icon">
+						<i class='bx bx-search'></i>
+						<input id="fineSearch" type="text" placeholder="Tìm kiếm người mượn, mã sách..."
+							oninput="filterTable('fineSearch','fineBody')">
+					</div>
+					<button class="btn-filter"><i class='bx bx-filter-alt'></i> Lọc</button>
+				</div>
+
+				<!-- Fine table -->
+				<div class="report-table-wrap">
+					<table class="report-table">
+						<thead>
+							<tr>
+								<th>Người mượn</th>
+								<th>Mã sách</th>
+								<th>Tên sách</th>
+								<th>Tình trạng</th>
+								<th>Lý do</th>
+								<th>Số tiền phạt</th>
+								<th>Ngày tạo</th>
+								<th>Mã phiếu mượn</th>
+								<th>Trạng thái</th>
+							</tr>
+						</thead>
+						<tbody id="fineBody">
+							<tr>
+								<td><strong>Nguyễn Thị Bình</strong></td>
+								<td>KT003</td>
+								<td>Kinh tế vĩ mô</td>
+								<td><span class="rbadge rb-late">Trễ hạn</span></td>
+								<td>Trễ hạn quá 2 ngày</td>
+								<td class="fine-amount">20.000đ</td>
+								<td>18/10/2025</td>
+								<td>KT001</td>
+								<td><span class="rbadge rb-paid">Đã thanh toán</span></td>
+							</tr>
+							<tr>
+								<td><strong>Lê Tấn Tú</strong></td>
+								<td>KT003</td>
+								<td>Kinh tế vĩ mô</td>
+								<td><span class="rbadge rb-late">Trễ hạn</span></td>
+								<td>Trễ hạn quá 10 ngày</td>
+								<td class="fine-amount">50.000đ</td>
+								<td>23/11/2025</td>
+								<td>KT001</td>
+								<td><span class="rbadge rb-unpaid">Chưa thanh toán</span></td>
+							</tr>
+							<tr>
+								<td><strong>Hoàng Thị Phương</strong></td>
+								<td>KT003</td>
+								<td>Kinh tế vĩ mô</td>
+								<td><span class="rbadge rb-late">Trễ hạn</span></td>
+								<td>Trễ hạn quá 6 ngày</td>
+								<td class="fine-amount">30.000đ</td>
+								<td>23/11/2025</td>
+								<td>KT001</td>
+								<td><span class="rbadge rb-unpaid">Chưa thanh toán</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Summary -->
+				<p class="fine-summary-heading">Thống kê phí phạt</p>
+				<div class="fine-summary-grid">
+					<div class="fine-card">
+						<div class="fc-label">Tổng tiền phạt đã thu</div>
+						<div class="fc-value">20.000đ</div>
+					</div>
+					<div class="fine-card">
+						<div class="fc-label">Tổng tiền phạt chưa thu</div>
+						<div class="fc-value" style="color:#ef4444;">80.000đ</div>
+					</div>
+					<div class="fine-card">
+						<div class="fc-label">Khoản phạt cao nhất</div>
+						<div class="fc-value">50.000đ</div>
+					</div>
+					<div class="fine-card">
+						<div class="fc-label">Người mượn bị phạt nhiều nhất</div>
+						<div class="fc-value" style="font-size:15px;">Lê Tấn Tú</div>
+					</div>
+				</div>
+
+			</div><!-- /panel-fines -->
+
+		</main>
+	</div>
+
+	<script src="../../../assets/js/sidebar.js"></script>
+	<script src="../../../assets/js/charts.js"></script>
+	<script>
+		/* ── Main tab ── */
+		function switchMainTab(btn, panelId, title) {
+			document.querySelectorAll('.main-tab-btn').forEach(function (b) { b.classList.remove('active'); });
+			document.querySelectorAll('.main-panel').forEach(function (p) { p.classList.remove('active'); });
+			btn.classList.add('active');
+			document.getElementById(panelId).classList.add('active');
+			var h = document.getElementById('reportPageTitle');
+			if (h) h.textContent = title;
+		}
+
+		/* ── Sub group-tab ── */
+		function switchSubTab(btn, panelId) {
+			var group = btn.closest('.btn-group-tabs');
+			group.querySelectorAll('.btn-group-tab').forEach(function (b) { b.classList.remove('active'); });
+			['sub-returned', 'sub-borrowing', 'sub-stock'].forEach(function (id) {
+				var el = document.getElementById(id);
+				if (el) el.classList.remove('active');
+			});
+			btn.classList.add('active');
+			var el = document.getElementById(panelId);
+			if (el) el.classList.add('active');
+		}
+
+		/* ── Generic table filter ── */
+		function filterTable(inputId, tbodyId) {
+			var kw = document.getElementById(inputId).value.toLowerCase().trim();
+			document.querySelectorAll('#' + tbodyId + ' tr').forEach(function (tr) {
+				tr.style.display = !kw || tr.textContent.toLowerCase().includes(kw) ? '' : 'none';
+			});
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý trả sách - Thư viện DUE</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/css/sidebar.css">
+    <style>
+        .tabs-pill-container {
+            display: flex;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .tabs-pill-container .tab {
+            flex: 1;
+            text-align: center;
+            padding: 14px 15px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tabs-pill-container .tab:hover {
+            background-color: #f3f4f6;
+        }
+
+        .tabs-pill-container .tab.active {
+            background-color: #f97316;
+            color: #ffffff;
+            box-shadow: 0 4px 6px rgba(249, 115, 22, 0.2);
+        }
+
+        .badge-blue {
+            background-color: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .badge-orange {
+            background-color: #f97316;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .badge-outline-blue {
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #eff6ff;
+            white-space: nowrap;
+        }
+
+        .badge-outline-orange {
+            border: 1px solid #f97316;
+            color: #f97316;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #fff7ed;
+            white-space: nowrap;
+        }
+
+        .badge-outline-red {
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #fef2f2;
+            white-space: nowrap;
+        }
+
+        .btn-red {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .btn-blue-dark {
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .text-red-bold {
+            color: #ef4444;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tab-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tab-pane {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Tùy chỉnh Table để chuyên nghiệp hơn */
+        table.table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+        }
+
+        table.table th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+            background-color: #f9fafb;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        table.table th::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        table.table td {
+            text-align: left;
+            padding: 16px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            vertical-align: middle;
+            border-bottom: 1px solid #f3f4f6;
+            white-space: nowrap;
+            transition: background-color 0.2s ease;
+        }
+
+        table.table tbody tr:hover td {
+            background-color: #f9fafb;
+        }
+
+        .data-table-scroll, .table-wrapper {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Độ rộng các cột để căn chỉnh */
+        .col-wrap {
+            white-space: normal !important; 
+            word-wrap: break-word;
+        }
+
+        /* Đẩy nút tác vụ về sát góc phải */
+        th.col-action, td.col-action {
+            width: 1%;
+            white-space: nowrap; 
+            text-align: right !important;
+            padding-right: 24px !important;
+        }
+
+        /* Override global .popup-modal max-width cho popup thanh toán */
+        #popup-payment {
+            max-width: min(920px, 96vw) !important;
+        }
+
+        /* Tránh style table global ghi đè bảng trong popup thanh toán */
+        #popup-payment table th:last-child,
+        #popup-payment table td:last-child {
+            width: auto !important;
+            white-space: nowrap !important;
+            text-align: left !important;
+            padding-right: 14px !important;
+        }
+
+        #popup-payment table th,
+        #popup-payment table td {
+            text-align: left !important;
+            white-space: nowrap;
+            word-break: normal;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        #popup-payment table th {
+            background-color: #f9fafb !important;
+            position: static !important;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 600;
+            border-bottom: 1px solid #e5e7eb !important;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <aside id="app-sidebar" class="sidebar"></aside>
+
+        <main class="main-content data-page">
+            <header class="header">
+                <div class="header-left">
+                    <h1>Quản lý trả sách</h1>
+                    <p>Đại học Kinh tế - Đại học Đà Nẵng</p>
+                </div>
+
+                <div class="header-right">
+                    <div class="user-info">
+                        <div class="user-details">
+                            <span class="user-name">Nguyễn Văn An</span>
+                            <span class="user-role">Thủ thư</span>
+                        </div>
+                        <div class="user-avatar">N</div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="page-return">
+                <div class="search-section search-uniform card">
+                    <p class="section-label">Tìm kiếm</p>
+                    <div class="search-bar">
+                        <div class="input-with-icon">
+                            <label for="searchInput" class="sr-only">Từ khóa tìm kiếm</label>
+                            <i class='bx bx-search'></i>
+                            <input id="searchInput" type="text" placeholder="Nhập thông tin để tìm kiếm" oninput="performSearch()" onkeyup="if(event.key === 'Enter') performSearch()">
+                        </div>
+                        <button class="btn btn-primary btn-orange" type="button" onclick="performSearch()">
+                            <i class='bx bx-search'></i> Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tabs-pill-container">
+                    <button class="tab active" type="button" onclick="switchTab(this, 'tab-1')">Xác nhận trả
+                        sách</button>
+                    <button class="tab" type="button" onclick="switchTab(this, 'tab-2')">Thanh toán phí phạt</button>
+                    <button class="tab" type="button" onclick="switchTab(this, 'tab-3')">Xử lý mất sách</button>
+                    <button class="tab" type="button" onclick="switchTab(this, 'tab-4')">Xác nhận đền sách</button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- TẤT CẢ TABS ĐƯỢC LOAD Ở ĐÂY VỚI HIỆU ỨNG ẨN/HIỆN -->
+
+                    <div id="tab-1" class="tab-pane active" style="display:flex;">
+                        <h3 class="section-heading">Danh sách sách đang mượn</h3>
+                        <div class="data-table-scroll table-wrapper" style="box-shadow: none; padding: 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">Mã phiếu</th>
+                                        <th style="width: 15%;">Mã sách</th>
+                                        <th style="width: 20%;">Tên sách</th>
+                                        <th style="width: 15%;">Người mượn</th>
+                                        <th style="width: 12%;">Ngày mượn</th>
+                                        <th style="width: 12%;">Hạn trả</th>
+                                        <th style="width: 10%;">Trạng thái</th>
+                                        <th class="col-action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>PM-001</strong></td>
+                                        <td>KT001</td>
+                                        <td class="col-wrap">Kinh tế vi mô</td>
+                                        <td class="col-wrap">Trần Thị Bình</td>
+                                        <td>10/1/2026</td>
+                                        <td>24/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action">
+                                            <button class="btn-red"
+                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-return-confirm').style.display='block';">
+                                                Xác nhận trả
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-002</strong></td>
+                                        <td>TC001</td>
+                                        <td class="col-wrap">Nguyên lý kế toán</td>
+                                        <td class="col-wrap">Trần Lâm</td>
+                                        <td>10/1/2026</td>
+                                        <td>24/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action"><button class="btn-red">Xác nhận trả</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-003</strong></td>
+                                        <td>KT002</td>
+                                        <td class="col-wrap">Kinh tế vĩ mô</td>
+                                        <td class="col-wrap">Nguyễn Kiệm</td>
+                                        <td>10/1/2026</td>
+                                        <td>24/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action"><button class="btn-red">Xác nhận trả</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-004</strong></td>
+                                        <td>KD001</td>
+                                        <td class="col-wrap">Quản trị học</td>
+                                        <td class="col-wrap">Huỳnh Nữ</td>
+                                        <td>10/1/2026</td>
+                                        <td>24/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action"><button class="btn-red">Xác nhận trả</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-005</strong></td>
+                                        <td>EC004</td>
+                                        <td class="col-wrap">English Communication</td>
+                                        <td class="col-wrap">Yến Phương</td>
+                                        <td>10/1/2026</td>
+                                        <td>24/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action"><button class="btn-red">Xác nhận trả</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-006</strong></td>
+                                        <td>CT001</td>
+                                        <td class="col-wrap">Lịch sử Đảng</td>
+                                        <td class="col-wrap">Văn Ân</td>
+                                        <td>10/1/2026</td>
+                                        <td>24/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action"><button class="btn-red">Xác nhận trả</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-007</strong></td>
+                                        <td>CT002</td>
+                                        <td class="col-wrap">Kinh tế chính trị</td>
+                                        <td class="col-wrap">Văn Dung</td>
+                                        <td>10/1/2026</td>
+                                        <td>24/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action"><button class="btn-red">Xác nhận trả</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="tab-2" class="tab-pane hidden" style="display:none;">
+                        <h3 class="section-heading">Danh sách người dùng nợ phí phạt</h3>
+                        <div class="data-table-scroll table-wrapper" style="box-shadow: none; padding: 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">Mã phạt</th>
+                                        <th style="width: 25%;">Người dùng</th>
+                                        <th style="width: 20%;">Mã SV/GV</th>
+                                        <th style="width: 30%;">Tổng tiền phạt chưa thanh toán</th>
+                                        <th class="col-action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>FINE-001</strong></td>
+                                        <td class="col-wrap">Trần Thị Bình</td>
+                                        <td>2051010001</td>
+                                        <td><span class="text-red-bold" style="font-size: 15px;">50.000đ</span></td>
+                                        <td class="col-action">
+                                            <button class="btn-blue-dark"
+                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-payment').style.display='flex';">
+                                                Thanh toán
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FINE-002</strong></td>
+                                        <td class="col-wrap">Nguyễn Tiến Phước</td>
+                                        <td>2051010002</td>
+                                        <td><span class="text-red-bold" style="font-size: 15px;">80.000đ</span></td>
+                                        <td class="col-action"><button class="btn-blue-dark">Thanh toán</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FINE-003</strong></td>
+                                        <td class="col-wrap">Huỳnh Thị Ngọc</td>
+                                        <td>2051010003</td>
+                                        <td><span class="text-red-bold" style="font-size: 15px;">30.000đ</span></td>
+                                        <td class="col-action"><button class="btn-blue-dark">Thanh toán</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FINE-004</strong></td>
+                                        <td class="col-wrap">Lê Lai</td>
+                                        <td>2051010013</td>
+                                        <td><span class="text-red-bold" style="font-size: 15px;">10.000đ</span></td>
+                                        <td class="col-action"><button class="btn-blue-dark">Thanh toán</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>FINE-005</strong></td>
+                                        <td class="col-wrap">Thế Đức</td>
+                                        <td>2051010006</td>
+                                        <td><span class="text-red-bold" style="font-size: 15px;">20.000đ</span></td>
+                                        <td class="col-action"><button class="btn-blue-dark">Thanh toán</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="tab-3" class="tab-pane hidden" style="display:none;">
+                        <h3 class="section-heading">Danh sách sách quá hạn chờ xử lý</h3>
+                        <div class="data-table-scroll table-wrapper" style="box-shadow: none; padding: 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">Mã phiếu</th>
+                                        <th style="width: 25%;">Tên sách</th>
+                                        <th style="width: 15%;">Mã sách</th>
+                                        <th style="width: 15%;">Người mượn</th>
+                                        <th style="width: 10%;">Hạn trả</th>
+                                        <th style="width: 10%;">Trạng thái</th>
+                                        <th class="col-action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>PM-001</strong></td>
+                                        <td class="col-wrap">Kinh tế vi mô</td>
+                                        <td>KT001</td>
+                                        <td class="col-wrap">Trần Thị Bình</td>
+                                        <td>24/1/2026</td>
+                                        <td><span class="badge-orange">Quá hạn</span></td>
+                                        <td class="col-action">
+                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
+                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
+                                                <i class='bx bx-error'></i> Báo mất
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-003</strong></td>
+                                        <td class="col-wrap">Kinh tế vĩ mô</td>
+                                        <td>KT002</td>
+                                        <td class="col-wrap">Nguyễn Kiệm</td>
+                                        <td>26/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action">
+                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
+                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
+                                                <i class='bx bx-error'></i> Báo mất
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-004</strong></td>
+                                        <td class="col-wrap">Quản trị học</td>
+                                        <td>KD001</td>
+                                        <td class="col-wrap">Huỳnh Nữ</td>
+                                        <td>26/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action">
+                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
+                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
+                                                <i class='bx bx-error'></i> Báo mất
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-005</strong></td>
+                                        <td class="col-wrap">English Communication</td>
+                                        <td>EC004</td>
+                                        <td class="col-wrap">Yến Phương</td>
+                                        <td>26/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action">
+                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
+                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
+                                                <i class='bx bx-error'></i> Báo mất
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-006</strong></td>
+                                        <td class="col-wrap">Lịch sử Đảng</td>
+                                        <td>CT001</td>
+                                        <td class="col-wrap">Văn Ân</td>
+                                        <td>26/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action">
+                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
+                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
+                                                <i class='bx bx-error'></i> Báo mất
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PM-007</strong></td>
+                                        <td class="col-wrap">Kinh tế chính trị</td>
+                                        <td>CT002</td>
+                                        <td class="col-wrap">Văn Dung</td>
+                                        <td>26/1/2026</td>
+                                        <td><span class="badge-blue">Đang mượn</span></td>
+                                        <td class="col-action">
+                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
+                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
+                                                <i class='bx bx-error'></i> Báo mất
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="tab-4" class="tab-pane hidden" style="display:none;">
+                        <h3 class="section-heading">Danh sách hồ sơ chờ xác nhận đền sách</h3>
+                        <div class="data-table-scroll table-wrapper" style="box-shadow: none; padding: 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">Mã hồ sơ</th>
+                                        <th style="width: 25%;">Sách cần đền</th>
+                                        <th style="width: 15%;">Mã sách</th>
+                                        <th style="width: 20%;">Người đền</th>
+                                        <th style="width: 15%;">Ngày báo mất</th>
+                                        <th class="col-action">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="compensateTableBody">
+                                    <tr>
+                                        <td><strong>HS-001</strong></td>
+                                        <td class="col-wrap">Kinh tế vi mô</td>
+                                        <td>KT001</td>
+                                        <td class="col-wrap">Trần Thị Bình</td>
+                                        <td>18/1/2026</td>
+                                        <td class="col-action">
+                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                                Chờ đền sách
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>HS-002</strong></td>
+                                        <td class="col-wrap">Nguyên lý kế toán</td>
+                                        <td>TC001</td>
+                                        <td class="col-wrap">Trần Lâm</td>
+                                        <td>20/1/2026</td>
+                                        <td class="col-action">
+                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                                Chờ đền sách
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>HS-003</strong></td>
+                                        <td class="col-wrap">Quản trị học</td>
+                                        <td>KD001</td>
+                                        <td class="col-wrap">Huỳnh Nữ</td>
+                                        <td>22/1/2026</td>
+                                        <td class="col-action">
+                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                                Chờ đền sách
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>HS-004</strong></td>
+                                        <td class="col-wrap">English Communication</td>
+                                        <td>EC004</td>
+                                        <td class="col-wrap">Yến Phương</td>
+                                        <td>23/1/2026</td>
+                                        <td class="col-action">
+                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                                Chờ đền sách
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>HS-005</strong></td>
+                                        <td class="col-wrap">Lịch sử Đảng</td>
+                                        <td>CT001</td>
+                                        <td class="col-wrap">Văn Ân</td>
+                                        <td>24/1/2026</td>
+                                        <td class="col-action">
+                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                                Chờ đền sách
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- POPUPS -->
+    <div class="popup-overlay" id="popupOverlay"
+        onclick="if(event.target === this) { this.style.display='none'; document.querySelectorAll('.popup-modal').forEach(p => p.style.display='none'); }">
+        <!-- Xác nhận trả sách POPUP -->
+        <div id="popup-return-confirm" class="popup-modal"
+            style="display:none; width:650px; background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+            <div class="popup-header" style="position:relative; padding:24px 24px 10px 24px;">
+                <h3 style="font-weight:700; font-size:22px; width:100%; text-align:center; margin:0;">Xác nhận trả sách
+                </h3>
+                <button class="popup-close" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-return-confirm').style.display='none';"
+                    style="background:transparent; border:1px solid #e5e7eb; border-radius:8px; width:32px; height:32px; font-size:18px; cursor:pointer; position:absolute; right:20px; top:20px; color:#6b7280; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
+            <div class="popup-content" style="padding:20px 24px 24px;">
+                <div class="info-grid"
+                    style="display:grid; grid-template-columns:1fr 1fr; gap:20px; background:#f8f9fa; padding:20px 24px; border-radius:10px; border:1px solid #e5e7eb; margin-bottom:24px; row-gap:24px;">
+                    <div style="min-width:0;">
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Mã sách</div>
+                        <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">KT001</strong>
+                    </div>
+                    <div style="min-width:0;">
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Tên sách</div>
+                        <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Kinh tế học vi mô</strong>
+                    </div>
+                    <div style="min-width:0;">
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Người mượn</div>
+                        <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Trần Thị Bình</strong>
+                    </div>
+                    <div style="min-width:0;">
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Hạn trả</div>
+                        <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">24/1/2026</strong>
+                    </div>
+                </div>
+
+                <div class="form-group mb-0" style="margin-bottom:20px;">
+                    <div style="font-weight:700; font-size:13px; margin-bottom:14px; color:#111827;">Tình trạng sách khi trả <span style="color:#ef4444;">*</span></div>
+                    <div class="radio-group" style="display:flex; flex-direction:column; gap:14px;">
+                        <label class="radio-label"
+                            style="display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; color:#111827; margin:0;">
+                            <input type="radio" name="returnCondition" value="tot" checked
+                                style="width:18px; height:18px; accent-color:#3b82f6; cursor:pointer;">
+                            <span>Tốt</span>
+                        </label>
+                        <label class="radio-label"
+                            style="display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; color:#111827; margin:0;">
+                            <input type="radio" name="returnCondition" value="huhong"
+                                style="width:18px; height:18px; accent-color:#3b82f6; cursor:pointer;">
+                            <span>Hư hỏng</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer"
+                style="display:flex; justify-content:center; gap:16px; border-top:1px solid #f0f0f0; padding:20px 24px;">
+                <button class="btn btn-outline" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-return-confirm').style.display='none'; showToast('returnError');"
+                    style="padding:10px 32px; border:1px solid #e5e7eb; background:#fff; border-radius:8px; font-weight:600; cursor:pointer; color:#111827; outline:none;">Hủy</button>
+                <button class="btn btn-orange" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-return-confirm').style.display='none'; showToast('returnSuccess');"
+                    style="padding:10px 32px; background:#f97316; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; outline:none;">Xác
+                    nhận</button>
+            </div>
+        </div>
+
+        <!-- Xác nhận đền sách POPUP -->
+        <div id="popup-compensate-confirm" class="popup-modal"
+            style="display:none; width:560px; background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+            <div class="popup-header" style="position:relative; padding:24px 24px 10px 24px;">
+                <h3 style="font-weight:700; font-size:22px; width:100%; text-align:center; margin:0;">Xác nhận đền sách
+                </h3>
+                <button class="popup-close" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-compensate-confirm').style.display='none';"
+                    style="background:transparent; border:1px solid #e5e7eb; border-radius:8px; width:32px; height:32px; font-size:18px; cursor:pointer; position:absolute; right:20px; top:20px; color:#6b7280; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
+            <div class="popup-content" style="padding:20px 24px 24px;">
+                <div class="info-grid"
+                    style="display:flex; flex-direction:column; gap:20px; background:#f8f9fa; padding:24px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:10px;">
+                    <div style="border-bottom:1px solid #e5e7eb; padding-bottom:20px;">
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Mã hồ sơ</div>
+                        <strong style="font-size:18px; color:#111827;">1</strong>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 20px;">
+                        <div style="min-width:0;">
+                            <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Sách cần đền</div>
+                            <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Kinh tế vi mô</strong>
+                        </div>
+                        <div style="min-width:0;">
+                            <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Mã sách</div>
+                            <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">KT001</strong>
+                        </div>
+                        <div style="min-width:0;">
+                            <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Người đền</div>
+                            <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Trần Thị Bình</strong>
+                        </div>
+                        <div style="min-width:0;">
+                            <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Ngày khai báo</div>
+                            <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">24/1/2026</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer"
+                style="display:flex; justify-content:flex-end; gap:16px; border-top:1px solid #f0f0f0; padding:16px 20px;">
+                <button class="btn btn-outline" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-compensate-confirm').style.display='none';"
+                    style="padding:10px 28px; border:1px solid #e5e7eb; background:#fff; border-radius:8px; font-weight:600; cursor:pointer; color:#111827; outline:none;">Hủy</button>
+                <button class="btn btn-red" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-compensate-confirm').style.display='none'; showToast('compensateSuccess');"
+                    style="padding:10px 28px; background:#ff5722; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; outline:none;">Xác
+                    nhận</button>
+            </div>
+        </div>
+
+        <!-- Xử lý mất sách POPUP -->
+        <div id="popup-lost-book" class="popup-modal"
+            style="display:none; width:650px; background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+            <div class="popup-header" style="position:relative; padding:24px 24px 10px 24px;">
+                <h3 style="font-weight:700; font-size:22px; width:100%; text-align:center; margin:0;">Xử lý mất sách
+                </h3>
+                <button class="popup-close" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-lost-book').style.display='none';"
+                    style="background:transparent; border:1px solid #e5e7eb; border-radius:8px; width:32px; height:32px; font-size:18px; cursor:pointer; position:absolute; right:20px; top:20px; color:#6b7280; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
+            <div class="popup-content" style="padding:20px 24px 24px;">
+                <div class="info-grid"
+                    style="display:grid; grid-template-columns:1fr 1fr; gap:20px; background:#f8f9fa; padding:20px 24px; border-radius:10px; border:1px solid #e5e7eb; margin-bottom:24px;">
+                    <div style="min-width:0;">
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Sách</div>
+                        <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Kinh tế học vi mô</strong>
+                    </div>
+                    <div style="min-width:0;">
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Người mượn</div>
+                        <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Trần Thị Bình</strong>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:22px;">
+                    <label style="font-weight:700; font-size:13px; margin-bottom:8px; display:block; color:#111827;">Ngày khai báo mất <span style="color:#ef4444;">*</span></label>
+                    <div style="position:relative; display:flex; align-items:center;">
+                        <input type="text" class="form-input" placeholder="Chọn ngày"
+                            style="width:100%; padding:12px 12px 12px 16px; border:1px solid #e5e7eb; border-radius:8px; outline:none; font-size:14px; box-sizing:border-box;">
+                        <i class='bx bx-calendar'
+                            style="position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:20px; color:#6b7280; pointer-events:none;"></i>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:22px;">
+                    <label style="font-weight:700; font-size:13px; margin-bottom:8px; display:block; color:#111827;">Ghi chú</label>
+                    <textarea class="form-input" placeholder="Nhập ghi chú (tùy chọn)"
+                        style="width:100%; padding:12px 16px; border:1px solid #e5e7eb; border-radius:8px; outline:none; font-family:inherit; resize:none; height:100px; font-size:14px; box-sizing:border-box;"></textarea>
+                </div>
+
+                <div class="form-group mb-0" style="margin-bottom:20px;">
+                    <div style="font-weight:700; font-size:13px; margin-bottom:14px; color:#111827;">Phương án bồi hoàn <span style="color:#ef4444;">*</span></div>
+                    <div class="radio-group" style="display:flex; flex-direction:column; gap:14px;">
+                        <label class="radio-label"
+                            style="display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; color:#111827; margin:0; padding:12px; background:#f8f9fa; border-radius:8px; border:1px solid #e5e7eb; transition:all 0.2s;">
+                            <input type="radio" name="compensateMethod" value="money" checked
+                                style="width:18px; height:18px; accent-color:#3b82f6; cursor:pointer;">
+                            <span style="flex:1;">Bồi thường tiền <strong style="color:#ff5722;">(500.000đ)</strong></span>
+                        </label>
+                        <label class="radio-label"
+                            style="display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; color:#111827; margin:0; padding:12px; background:#f8f9fa; border-radius:8px; border:1px solid #e5e7eb; transition:all 0.2s;">
+                            <input type="radio" name="compensateMethod" value="book"
+                                style="width:18px; height:18px; accent-color:#3b82f6; cursor:pointer;">
+                            <span>Đền sách mới</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer"
+                style="display:flex; justify-content:flex-end; gap:16px; border-top:1px solid #f0f0f0; padding:20px 24px;">
+                <button class="btn btn-outline" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-lost-book').style.display='none';"
+                    style="padding:10px 32px; border:1px solid #e5e7eb; background:#fff; border-radius:8px; font-weight:600; cursor:pointer; color:#111827; outline:none;">Hủy</button>
+                <button class="btn btn-orange" type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-lost-book').style.display='none'; showToast('lostSuccess');"
+                    style="padding:10px 32px; background:#f97316; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; outline:none;">Xác
+                    nhận</button>
+            </div>
+        </div>
+
+        <!-- Thanh toán phí phạt POPUP -->
+        <div id="popup-payment" class="popup-modal popup-payment"
+            style="display:none; flex-direction:column; width:920px; max-width:96vw; background:#fff; border-radius:16px; padding:0; box-shadow:0 20px 60px rgba(0,0,0,0.15); max-height:90vh; overflow:hidden;">
+            <!-- Header (cố định trên cùng) -->
+            <div style="flex-shrink:0; position:relative; background:#fff; border-bottom:1px solid #f0f0f0; padding:20px 28px 16px 28px; border-radius:16px 16px 0 0;">
+                <h3 style="font-weight:700; font-size:20px; text-align:center; margin:0; color:#111827;">Thanh toán phí phạt</h3>
+                <button type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-payment').style.display='none';"
+                    style="background:transparent; border:1px solid #e5e7eb; border-radius:8px; width:32px; height:32px; font-size:18px; cursor:pointer; position:absolute; right:20px; top:50%; transform:translateY(-50%); color:#6b7280; display:flex; align-items:center; justify-content:center;">&times;</button>
+            </div>
+
+            <!-- Body (cuộn nội dung) -->
+            <div style="flex:1; overflow-y:auto; padding:20px 28px 4px 28px;">
+                <!-- Người dùng -->
+                <div style="border:1px solid #e5e7eb; padding:14px 20px; border-radius:10px; margin-bottom:18px;">
+                    <div style="color:#f97316; font-size:12px; font-weight:600; margin-bottom:4px;">Người dùng</div>
+                    <strong style="font-size:16px; color:#111827; font-weight:700;">Trần Thị Bình</strong>
+                </div>
+
+                <!-- Bảng chi tiết phí phạt -->
+                <div style="border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; margin-bottom:18px;">
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%; border-collapse:collapse; text-align:left; min-width:750px;">
+                            <thead>
+                                <tr style="background:#f9fafb;">
+                                    <th style="padding:12px 14px; font-size:12px; color:#6b7280; font-weight:600; border-bottom:1px solid #e5e7eb; white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em;">Mã sách trong kho</th>
+                                    <th style="padding:12px 14px; font-size:12px; color:#6b7280; font-weight:600; border-bottom:1px solid #e5e7eb; white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em;">Tên sách</th>
+                                    <th style="padding:12px 14px; font-size:12px; color:#6b7280; font-weight:600; border-bottom:1px solid #e5e7eb; white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em;">Loại phạt</th>
+                                    <th style="padding:12px 14px; font-size:12px; color:#6b7280; font-weight:600; border-bottom:1px solid #e5e7eb; white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em;">Lý do</th>
+                                    <th style="padding:12px 14px; font-size:12px; color:#6b7280; font-weight:600; border-bottom:1px solid #e5e7eb; white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em;">Số Tiền</th>
+                                    <th style="padding:12px 14px; font-size:12px; color:#6b7280; font-weight:600; border-bottom:1px solid #e5e7eb; white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em;">Ngày tạo</th>
+                                    <th style="padding:12px 14px; font-size:12px; color:#6b7280; font-weight:600; border-bottom:1px solid #e5e7eb; white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em;">Mã phiếu mượn</th>
+                                    <th style="padding:12px 14px; font-size:12px; color:#6b7280; font-weight:600; border-bottom:1px solid #e5e7eb; white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em;">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom:1px solid #f3f4f6;">
+                                    <td style="padding:14px; font-size:13px; font-weight:500; color:#374151; white-space:nowrap;">KT001</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">Kinh tế học vi mô</td>
+                                    <td style="padding:14px; white-space:nowrap;"><span style="background:#eff6ff; color:#3b82f6; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid #bfdbfe;">Trễ hạn</span></td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">Quá hạn 5 ngày</td>
+                                    <td style="padding:14px; font-size:13px; font-weight:700; color:#f97316; white-space:nowrap;">50.000đ</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">18/1/2026</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">KT001</td>
+                                    <td style="padding:14px; white-space:nowrap;"><span style="background:#ff5722; color:#fff; padding:5px 10px; border-radius:20px; font-size:12px; font-weight:600;">Chưa thanh toán</span></td>
+                                </tr>
+                                <tr style="border-bottom:1px solid #f3f4f6;">
+                                    <td style="padding:14px; font-size:13px; font-weight:500; color:#374151; white-space:nowrap;">KT001</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">Kinh tế học vi mô</td>
+                                    <td style="padding:14px; white-space:nowrap;"><span style="background:#fff7ed; color:#f97316; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid #fed7aa;">Hư hỏng</span></td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">Rách bìa sách</td>
+                                    <td style="padding:14px; font-size:13px; font-weight:700; color:#f97316; white-space:nowrap;">80.000đ</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">18/1/2026</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">KT001</td>
+                                    <td style="padding:14px; white-space:nowrap;"><span style="background:#ff5722; color:#fff; padding:5px 10px; border-radius:20px; font-size:12px; font-weight:600;">Chưa thanh toán</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:14px; font-size:13px; font-weight:500; color:#374151; white-space:nowrap;">KT001</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">Kinh tế học vi mô</td>
+                                    <td style="padding:14px; white-space:nowrap;"><span style="background:#fef2f2; color:#ef4444; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:500; border:1px solid #fecaca;">Đền sách</span></td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">Mất sách</td>
+                                    <td style="padding:14px; font-size:13px; font-weight:700; color:#f97316; white-space:nowrap;">500.000đ</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">18/1/2026</td>
+                                    <td style="padding:14px; font-size:13px; color:#374151; white-space:nowrap;">KT001</td>
+                                    <td style="padding:14px; white-space:nowrap;"><span style="background:#ff5722; color:#fff; padding:5px 10px; border-radius:20px; font-size:12px; font-weight:600;">Chưa thanh toán</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Phương thức thanh toán -->
+                <div style="margin-bottom:14px;">
+                    <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:10px;">Phương thức thanh toán</div>
+                    <div id="pm-cash-label"
+                        style="display:flex; align-items:center; gap:12px; background:#fff; border:2px solid #ff5722; padding:12px 16px; border-radius:8px; cursor:pointer; margin-bottom:8px;"
+                        onclick="document.getElementById('radio-cash').checked=true; document.getElementById('pm-cash-label').style.borderColor='#ff5722'; document.getElementById('pm-transfer-label').style.borderColor='#e5e7eb';">
+                        <input type="radio" id="radio-cash" name="paymentMethodNew" value="cash" checked style="accent-color:#ff5722; width:18px; height:18px; pointer-events:none;">
+                        <span style="font-size:14px; font-weight:500; color:#111827;">Tiền mặt</span>
+                    </div>
+                    <div id="pm-transfer-label"
+                        style="display:flex; align-items:center; gap:12px; background:#fff; border:2px solid #e5e7eb; padding:12px 16px; border-radius:8px; cursor:pointer;"
+                        onclick="document.getElementById('radio-transfer').checked=true; document.getElementById('pm-transfer-label').style.borderColor='#ff5722'; document.getElementById('pm-cash-label').style.borderColor='#e5e7eb';">
+                        <input type="radio" id="radio-transfer" name="paymentMethodNew" value="transfer" style="accent-color:#ff5722; width:18px; height:18px; pointer-events:none;">
+                        <span style="font-size:14px; font-weight:500; color:#111827;">Chuyển khoản</span>
+                    </div>
+                </div>
+
+                <!-- Tổng tiền -->
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0 6px 0;">
+                    <span style="font-size:15px; font-weight:700; color:#111827;">Tổng tiền</span>
+                    <span style="font-size:22px; font-weight:800; color:#f97316;">630.000đ</span>
+                </div>
+            </div>
+
+            <!-- Footer (cố định dưới cùng) -->
+            <div style="flex-shrink:0; display:flex; justify-content:center; gap:16px; border-top:1px solid #f0f0f0; padding:16px 28px 20px 28px;">
+                <button type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-payment').style.display='none';"
+                    style="padding:10px 40px; border:1px solid #d1d5db; background:#fff; border-radius:8px; font-weight:600; font-size:14px; cursor:pointer; color:#374151; outline:none;">Hủy</button>
+                <button type="button"
+                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-payment').style.display='none'; showToast('paymentSuccess');"
+                    style="padding:10px 40px; background:#ff5722; color:#fff; border:none; border-radius:8px; font-weight:600; font-size:14px; cursor:pointer; outline:none; box-shadow:0 2px 8px rgba(255,87,34,0.35);">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"
+        style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 15px;">
+    </div>
+    <style>
+        .toast-msg {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            animation: slideInToast 0.3s ease-out forwards;
+            min-width: 320px;
+            background-color: white;
+        }
+
+        .toast-msg.toast-success {
+            background-color: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #008000;
+        }
+
+        .toast-msg.toast-success i {
+            font-size: 26px;
+            color: #008000;
+        }
+
+        .toast-msg.toast-error {
+            background-color: #fff1f0;
+            border: 1px solid #ffa39e;
+            color: #ff0000;
+        }
+
+        .toast-msg.toast-error i {
+            font-size: 26px;
+            color: #ff0000;
+        }
+
+        @keyframes slideInToast {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOutToast {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+    <script src="../../../assets/js/sidebar.js"></script>
+    <script>
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            if (!searchInput) return;
+
+            const query = searchInput.value.toLowerCase().trim();
+            const activeTabPane = document.querySelector('.tab-pane.active') || document.querySelector('.tab-pane:not(.hidden)');
+            if (!activeTabPane) return;
+
+            const rows = activeTabPane.querySelectorAll('tbody tr');
+            rows.forEach((row) => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = !query || rowText.includes(query) ? '' : 'none';
+            });
+        }
+
+        function resetSearch() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.value = '';
+
+            document.querySelectorAll('.tab-pane').forEach((pane) => {
+                pane.querySelectorAll('tbody tr').forEach((row) => {
+                    row.style.display = '';
+                });
+            });
+        }
+
+        function switchTab(clickedTab, targetId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+
+            clickedTab.classList.add('active');
+            const target = document.getElementById(targetId);
+            target.classList.remove('hidden');
+            target.style.display = 'flex';
+        }
+
+        function showToast(type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+
+            let iconClass = '';
+            let message = '';
+
+            if (type === 'returnSuccess') {
+                toast.classList.add('toast-success');
+                iconClass = 'bx bx-check-circle';
+                message = 'Xác nhận trả sách thành công';
+            } else if (type === 'returnError') {
+                toast.classList.add('toast-error');
+                iconClass = 'bx bx-x-circle';
+                message = 'Xác nhận trả sách thất bại';
+            } else if (type === 'compensateSuccess') {
+                toast.classList.add('toast-success');
+                iconClass = 'bx bx-check-circle';
+                message = 'Xác nhận đền sách thành công';
+            } else if (type === 'compensateError') {
+                toast.classList.add('toast-error');
+                iconClass = 'bx bx-x-circle';
+                message = 'Xác nhận đền sách thất bại';
+            } else if (type === 'lostSuccess') {
+                toast.classList.add('toast-success');
+                iconClass = 'bx bx-check-circle';
+                message = 'Xác nhận mất sách thành công';
+            } else if (type === 'lostError') {
+                toast.classList.add('toast-error');
+                iconClass = 'bx bx-x-circle';
+                message = 'Xác nhận mất sách thất bại';
+            } else if (type === 'paymentSuccess') {
+                toast.classList.add('toast-success');
+                iconClass = 'bx bx-check-circle';
+                message = 'Thanh toán phí phạt thành công';
+            }
+
+            toast.innerHTML = `<i class='${iconClass}'></i> <span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'fadeOutToast 0.3s ease-out forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>
