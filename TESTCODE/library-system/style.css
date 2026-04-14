@@ -486,6 +486,15 @@ ul {
     background-color: #f3f7ff;
 }
 
+.table tbody tr.row-overdue {
+    background-color: #fff7ed;
+    box-shadow: inset 3px 0 0 #f97316;
+}
+
+.table tbody tr.row-overdue:hover {
+    background-color: #ffedd5;
+}
+
 .font-weight-bold {
     font-weight: 700;
 }
@@ -536,6 +545,12 @@ ul {
 
 .badge-red-btn:hover {
     background-color: var(--red-hover);
+}
+
+.action-disabled {
+    color: #9ca3af;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .badge-blue-btn {
@@ -661,6 +676,12 @@ ul {
     flex: 1;
 }
 
+.confirm-message {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #374151;
+}
+
 .info-grid {
     border: 1px solid #e5e7eb;
     border-radius: 10px;
@@ -726,6 +747,86 @@ ul {
 .radio-group.row-align {
     flex-direction: row;
     gap: 20px;
+    flex-wrap: wrap;
+}
+
+.return-condition-group.error {
+    border: 1px solid #fca5a5;
+    background: #fff7f7;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.field-error {
+    margin-top: 8px;
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.return-extra-section {
+    margin-top: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 16px;
+    background-color: #fcfdff;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 9px 0;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.summary-row:last-child {
+    border-bottom: 0;
+}
+
+.summary-row span {
+    color: #4b5563;
+    font-size: 14px;
+}
+
+.summary-row strong {
+    color: #111827;
+    font-size: 15px;
+}
+
+.read-only-row strong {
+    color: #f97316;
+}
+
+.return-summary-box {
+    margin-top: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 16px;
+    background-color: #f8fafc;
+}
+
+.summary-total {
+    border-top: 1px solid #d1d5db;
+    margin-top: 4px;
+    padding-top: 12px;
+}
+
+.summary-total span,
+.summary-total strong {
+    font-weight: 700;
+    color: #0f172a;
 }
 
 .radio-label {
