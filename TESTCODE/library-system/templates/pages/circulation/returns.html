@@ -273,6 +273,18 @@
             padding: 10px 12px;
         }
 
+        #lostCompensateGroup.error {
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 10px;
+            background: #fff7f7;
+        }
+
+        #lostReportDate.error-input {
+            border-color: #ef4444 !important;
+            background: #fff7f7;
+        }
+
         .field-error {
             margin-top: 8px;
             color: #dc2626;
@@ -572,7 +584,7 @@
                     </div>
 
                     <div id="tab-3" class="tab-pane hidden" style="display:none;">
-                        <h3 class="section-heading">Danh sách sách quá hạn chờ xử lý</h3>
+                        <h3 class="section-heading">Danh sách bản ghi mượn cần xử lý mất sách</h3>
                         <div class="data-table-scroll table-wrapper" style="box-shadow: none; padding: 0;">
                             <table class="table">
                                 <thead>
@@ -587,89 +599,59 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr class="lost-record" data-loan-id="PM-001" data-book-title="Kinh tế vi mô" data-book-code="KT001" data-borrower="Trần Thị Bình" data-due-date="24/1/2026" data-status="Quá hạn" data-book-price="500000" data-processing-fee="20000">
                                         <td><strong>PM-001</strong></td>
                                         <td class="col-wrap">Kinh tế vi mô</td>
                                         <td>KT001</td>
                                         <td class="col-wrap">Trần Thị Bình</td>
                                         <td>24/1/2026</td>
                                         <td><span class="badge-orange">Quá hạn</span></td>
-                                        <td class="col-action">
-                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
-                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
-                                                <i class='bx bx-error'></i> Báo mất
-                                            </button>
-                                        </td>
+                                        <td class="col-action"><button class="btn-red lost-report-trigger" style="display:flex; align-items:center; justify-content:center; gap:5px;" type="button"><i class='bx bx-error'></i> Báo mất</button></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="lost-record" data-loan-id="PM-003" data-book-title="Kinh tế vĩ mô" data-book-code="KT002" data-borrower="Nguyễn Kiệm" data-due-date="26/1/2026" data-status="Đang mượn" data-book-price="450000" data-processing-fee="20000">
                                         <td><strong>PM-003</strong></td>
                                         <td class="col-wrap">Kinh tế vĩ mô</td>
                                         <td>KT002</td>
                                         <td class="col-wrap">Nguyễn Kiệm</td>
                                         <td>26/1/2026</td>
                                         <td><span class="badge-blue">Đang mượn</span></td>
-                                        <td class="col-action">
-                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
-                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
-                                                <i class='bx bx-error'></i> Báo mất
-                                            </button>
-                                        </td>
+                                        <td class="col-action"><button class="btn-red lost-report-trigger" style="display:flex; align-items:center; justify-content:center; gap:5px;" type="button"><i class='bx bx-error'></i> Báo mất</button></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="lost-record" data-loan-id="PM-004" data-book-title="Quản trị học" data-book-code="KD001" data-borrower="Huỳnh Nữ" data-due-date="26/1/2026" data-status="Đang mượn" data-book-price="480000" data-processing-fee="20000">
                                         <td><strong>PM-004</strong></td>
                                         <td class="col-wrap">Quản trị học</td>
                                         <td>KD001</td>
                                         <td class="col-wrap">Huỳnh Nữ</td>
                                         <td>26/1/2026</td>
                                         <td><span class="badge-blue">Đang mượn</span></td>
-                                        <td class="col-action">
-                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
-                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
-                                                <i class='bx bx-error'></i> Báo mất
-                                            </button>
-                                        </td>
+                                        <td class="col-action"><button class="btn-red lost-report-trigger" style="display:flex; align-items:center; justify-content:center; gap:5px;" type="button"><i class='bx bx-error'></i> Báo mất</button></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="lost-record" data-loan-id="PM-005" data-book-title="English Communication" data-book-code="EC004" data-borrower="Yến Phương" data-due-date="26/1/2026" data-status="Đang mượn" data-book-price="420000" data-processing-fee="20000">
                                         <td><strong>PM-005</strong></td>
                                         <td class="col-wrap">English Communication</td>
                                         <td>EC004</td>
                                         <td class="col-wrap">Yến Phương</td>
                                         <td>26/1/2026</td>
                                         <td><span class="badge-blue">Đang mượn</span></td>
-                                        <td class="col-action">
-                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
-                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
-                                                <i class='bx bx-error'></i> Báo mất
-                                            </button>
-                                        </td>
+                                        <td class="col-action"><button class="btn-red lost-report-trigger" style="display:flex; align-items:center; justify-content:center; gap:5px;" type="button"><i class='bx bx-error'></i> Báo mất</button></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="lost-record" data-loan-id="PM-006" data-book-title="Lịch sử Đảng" data-book-code="CT001" data-borrower="Văn Ân" data-due-date="26/1/2026" data-status="Đang mượn" data-book-price="390000" data-processing-fee="20000">
                                         <td><strong>PM-006</strong></td>
                                         <td class="col-wrap">Lịch sử Đảng</td>
                                         <td>CT001</td>
                                         <td class="col-wrap">Văn Ân</td>
                                         <td>26/1/2026</td>
                                         <td><span class="badge-blue">Đang mượn</span></td>
-                                        <td class="col-action">
-                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
-                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
-                                                <i class='bx bx-error'></i> Báo mất
-                                            </button>
-                                        </td>
+                                        <td class="col-action"><button class="btn-red lost-report-trigger" style="display:flex; align-items:center; justify-content:center; gap:5px;" type="button"><i class='bx bx-error'></i> Báo mất</button></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="lost-record" data-loan-id="PM-007" data-book-title="Kinh tế chính trị" data-book-code="CT002" data-borrower="Văn Dung" data-due-date="26/1/2026" data-status="Đã trả" data-book-price="410000" data-processing-fee="20000">
                                         <td><strong>PM-007</strong></td>
                                         <td class="col-wrap">Kinh tế chính trị</td>
                                         <td>CT002</td>
                                         <td class="col-wrap">Văn Dung</td>
                                         <td>26/1/2026</td>
-                                        <td><span class="badge-blue">Đang mượn</span></td>
-                                        <td class="col-action">
-                                            <button class="btn-red" style="display:flex; align-items:center; justify-content:center; gap:5px;"
-                                                onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-lost-book').style.display='block';">
-                                                <i class='bx bx-error'></i> Báo mất
-                                            </button>
-                                        </td>
+                                        <td><span class="badge-outline-blue">Đã trả</span></td>
+                                        <td class="col-action"><span class="action-disabled">Không khả dụng</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -899,51 +881,52 @@
 
         <!-- Xử lý mất sách POPUP -->
         <div id="popup-lost-book" class="popup-modal"
-            style="display:none; width:650px; background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+            style="display:none; width:min(680px, 96vw); background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); max-height:90vh; overflow:hidden;">
             <div class="popup-header" style="position:relative; padding:24px 24px 10px 24px;">
                 <h3 style="font-weight:700; font-size:22px; width:100%; text-align:center; margin:0;">Xử lý mất sách
                 </h3>
                 <button class="popup-close" type="button"
-                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-lost-book').style.display='none';"
+                    onclick="closeAllPopups()"
                     style="background:transparent; border:1px solid #e5e7eb; border-radius:8px; width:32px; height:32px; font-size:18px; cursor:pointer; position:absolute; right:20px; top:20px; color:#6b7280; display:flex; align-items:center; justify-content:center;">&times;</button>
             </div>
             <div class="popup-content" style="padding:20px 24px 24px;">
                 <div class="info-grid"
                     style="display:grid; grid-template-columns:1fr 1fr; gap:20px; background:#f8f9fa; padding:20px 24px; border-radius:10px; border:1px solid #e5e7eb; margin-bottom:24px;">
                     <div style="min-width:0;">
-                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Sách</div>
-                        <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Kinh tế học vi mô</strong>
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Tên sách</div>
+                        <strong id="lostBookTitle" style="font-size:15px; color:#111827; display:block; word-break:break-word;">-</strong>
                     </div>
                     <div style="min-width:0;">
-                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Người mượn</div>
-                        <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Trần Thị Bình</strong>
+                        <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Người dùng</div>
+                        <strong id="lostBorrowerName" style="font-size:15px; color:#111827; display:block; word-break:break-word;">-</strong>
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-bottom:22px;">
                     <label style="font-weight:700; font-size:13px; margin-bottom:8px; display:block; color:#111827;">Ngày khai báo mất <span style="color:#ef4444;">*</span></label>
                     <div style="position:relative; display:flex; align-items:center;">
-                        <input type="text" class="form-input" placeholder="Chọn ngày"
+                        <input type="date" id="lostReportDate" class="form-input" placeholder="Chọn ngày"
                             style="width:100%; padding:12px 12px 12px 16px; border:1px solid #e5e7eb; border-radius:8px; outline:none; font-size:14px; box-sizing:border-box;">
                         <i class='bx bx-calendar'
                             style="position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:20px; color:#6b7280; pointer-events:none;"></i>
                     </div>
+                    <p id="lostDateError" class="field-error hidden">Vui lòng chọn ngày hợp lệ</p>
                 </div>
 
                 <div class="form-group" style="margin-bottom:22px;">
                     <label style="font-weight:700; font-size:13px; margin-bottom:8px; display:block; color:#111827;">Ghi chú</label>
-                    <textarea class="form-input" placeholder="Nhập ghi chú (tùy chọn)"
+                    <textarea id="lostNote" class="form-input" placeholder="Nhập ghi chú (tùy chọn)"
                         style="width:100%; padding:12px 16px; border:1px solid #e5e7eb; border-radius:8px; outline:none; font-family:inherit; resize:none; height:100px; font-size:14px; box-sizing:border-box;"></textarea>
                 </div>
 
                 <div class="form-group mb-0" style="margin-bottom:20px;">
                     <div style="font-weight:700; font-size:13px; margin-bottom:14px; color:#111827;">Phương án bồi hoàn <span style="color:#ef4444;">*</span></div>
-                    <div class="radio-group" style="display:flex; flex-direction:column; gap:14px;">
+                    <div class="radio-group" id="lostCompensateGroup" style="display:flex; flex-direction:column; gap:14px;">
                         <label class="radio-label"
                             style="display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; color:#111827; margin:0; padding:12px; background:#f8f9fa; border-radius:8px; border:1px solid #e5e7eb; transition:all 0.2s;">
-                            <input type="radio" name="compensateMethod" value="money" checked
+                            <input type="radio" name="compensateMethod" value="money"
                                 style="width:18px; height:18px; accent-color:#3b82f6; cursor:pointer;">
-                            <span style="flex:1;">Bồi thường tiền <strong style="color:#ff5722;">(500.000đ)</strong></span>
+                            <span style="flex:1;">Bồi thường tiền</span>
                         </label>
                         <label class="radio-label"
                             style="display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; color:#111827; margin:0; padding:12px; background:#f8f9fa; border-radius:8px; border:1px solid #e5e7eb; transition:all 0.2s;">
@@ -952,15 +935,27 @@
                             <span>Đền sách mới</span>
                         </label>
                     </div>
+                    <p id="lostMethodError" class="field-error hidden">Vui lòng chọn phương án bồi hoàn.</p>
                 </div>
+
+                <div class="return-summary-box" id="lostOutcomeBox">
+                    <div class="section-title">Kết quả xử lý và phí phát sinh</div>
+                    <div class="summary-row"><span>Khoản phạt phát sinh</span><strong id="lostFineCreation">Chưa xác định</strong></div>
+                    <div class="summary-row"><span>Loại phạt</span><strong id="lostFineType">-</strong></div>
+                    <div class="summary-row"><span>Trạng thái khoản phạt</span><strong id="lostFineStatus">-</strong></div>
+                    <div class="summary-row"><span>Phí xử lý</span><strong id="lostProcessingFee">0đ</strong></div>
+                    <div class="summary-row"><span>Trạng thái bản ghi sau xử lý</span><strong id="lostRecordNextStatus">-</strong></div>
+                    <div class="summary-row summary-total"><span>Tổng số tiền phải thu</span><strong id="lostTotalAmount">0đ</strong></div>
+                </div>
+                <p id="lostOutcomeHint" class="section-label" style="font-size:12px; color:#64748b; margin-top:10px; margin-bottom:0;">Chọn phương án bồi hoàn để xem kết quả nghiệp vụ.</p>
             </div>
             <div class="popup-footer"
                 style="display:flex; justify-content:flex-end; gap:16px; border-top:1px solid #f0f0f0; padding:20px 24px;">
                 <button class="btn btn-outline" type="button"
-                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-lost-book').style.display='none';"
+                    onclick="closeAllPopups()"
                     style="padding:10px 32px; border:1px solid #e5e7eb; background:#fff; border-radius:8px; font-weight:600; cursor:pointer; color:#111827; outline:none;">Hủy</button>
                 <button class="btn btn-orange" type="button"
-                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-lost-book').style.display='none'; showToast('lostSuccess');"
+                    onclick="submitLostBookReport()"
                     style="padding:10px 32px; background:#f97316; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; outline:none;">Xác
                     nhận</button>
             </div>
@@ -1138,6 +1133,7 @@
     <script src="../../../assets/js/sidebar.js"></script>
     <script>
         let selectedReturnRow = null;
+        let selectedLostRow = null;
         let overdueFineValue = 0;
 
         function performSearch() {
@@ -1181,7 +1177,7 @@
                 compensateSuccess: { cls: 'toast-success', icon: 'bx bx-check-circle', msg: 'Xác nhận đền sách thành công' },
                 compensateError: { cls: 'toast-error', icon: 'bx bx-x-circle', msg: 'Xác nhận đền sách thất bại' },
                 lostSuccess: { cls: 'toast-success', icon: 'bx bx-check-circle', msg: 'Xác nhận mất sách thành công' },
-                lostError: { cls: 'toast-error', icon: 'bx bx-x-circle', msg: 'Xác nhận mất sách thất bại' },
+                lostError: { cls: 'toast-error', icon: 'bx bx-x-circle', msg: 'Xác nhận xử lý mất sách thất bại' },
                 paymentSuccess: { cls: 'toast-success', icon: 'bx bx-check-circle', msg: 'Thanh toán phí phạt thành công' },
                 error: { cls: 'toast-error', icon: 'bx bx-x-circle', msg: customMessage || 'Đã có lỗi xảy ra' }
             };
@@ -1205,11 +1201,15 @@
             return status === 'Đang mượn' || status === 'Quá hạn';
         }
 
+        function isLostEligibleStatus(status) {
+            return status === 'Đang mượn' || status === 'Quá hạn';
+        }
+
         function openModalById(id) {
             const overlay = document.getElementById('popupOverlay');
             if (!overlay) return;
             overlay.style.display = 'flex';
-            const flexModalIds = new Set(['popup-return-confirm', 'popup-return-cancel-confirm', 'popup-payment']);
+            const flexModalIds = new Set(['popup-return-confirm', 'popup-return-cancel-confirm', 'popup-payment', 'popup-lost-book']);
             document.querySelectorAll('.popup-modal').forEach((modal) => {
                 if (modal.id === id) {
                     modal.style.display = flexModalIds.has(id) ? 'flex' : 'block';
@@ -1368,6 +1368,163 @@
             }
         }
 
+        function markLostDateError(showError) {
+            const dateInput = document.getElementById('lostReportDate');
+            const dateError = document.getElementById('lostDateError');
+            if (!dateInput || !dateError) return;
+
+            dateInput.classList.toggle('error-input', showError);
+            dateError.classList.toggle('hidden', !showError);
+        }
+
+        function markLostMethodError(showError) {
+            const methodGroup = document.getElementById('lostCompensateGroup');
+            const methodError = document.getElementById('lostMethodError');
+            if (!methodGroup || !methodError) return;
+
+            methodGroup.classList.toggle('error', showError);
+            methodError.classList.toggle('hidden', !showError);
+        }
+
+        function resetLostFormState() {
+            const dateInput = document.getElementById('lostReportDate');
+            const noteInput = document.getElementById('lostNote');
+            if (dateInput) dateInput.value = '';
+            if (noteInput) noteInput.value = '';
+
+            document.querySelectorAll('input[name="compensateMethod"]').forEach((input) => {
+                input.checked = false;
+            });
+
+            markLostDateError(false);
+            markLostMethodError(false);
+            updateLostOutcome();
+        }
+
+        function updateLostOutcome() {
+            const method = getSelectedRadioValue('compensateMethod');
+            const bookPrice = Number(selectedLostRow?.dataset.bookPrice || 0);
+            const processingFee = Number(selectedLostRow?.dataset.processingFee || 0);
+
+            const lostFineCreation = document.getElementById('lostFineCreation');
+            const lostFineType = document.getElementById('lostFineType');
+            const lostFineStatus = document.getElementById('lostFineStatus');
+            const lostProcessingFee = document.getElementById('lostProcessingFee');
+            const lostRecordNextStatus = document.getElementById('lostRecordNextStatus');
+            const lostTotalAmount = document.getElementById('lostTotalAmount');
+            const lostOutcomeHint = document.getElementById('lostOutcomeHint');
+
+            if (!method) {
+                if (lostFineCreation) lostFineCreation.innerText = 'Chưa xác định';
+                if (lostFineType) lostFineType.innerText = '-';
+                if (lostFineStatus) lostFineStatus.innerText = '-';
+                if (lostProcessingFee) lostProcessingFee.innerText = formatCurrency(processingFee);
+                if (lostRecordNextStatus) lostRecordNextStatus.innerText = '-';
+                if (lostTotalAmount) lostTotalAmount.innerText = formatCurrency(0);
+                if (lostOutcomeHint) lostOutcomeHint.innerText = 'Chọn phương án bồi hoàn để xem kết quả nghiệp vụ.';
+                return;
+            }
+
+            if (method === 'money') {
+                if (lostFineCreation) lostFineCreation.innerText = 'Có tạo khoản phạt';
+                if (lostFineType) lostFineType.innerText = 'Mất sách';
+                if (lostFineStatus) lostFineStatus.innerText = 'Chưa thanh toán';
+                if (lostProcessingFee) lostProcessingFee.innerText = formatCurrency(processingFee);
+                if (lostRecordNextStatus) lostRecordNextStatus.innerText = 'Đang xử lý';
+                if (lostTotalAmount) lostTotalAmount.innerText = formatCurrency(bookPrice + processingFee);
+                if (lostOutcomeHint) lostOutcomeHint.innerText = 'Sau xác nhận: tạo phạt Mất sách trạng thái Chưa thanh toán, cộng thêm phí xử lý nếu có.';
+                return;
+            }
+
+            if (lostFineCreation) lostFineCreation.innerText = 'Không tạo phạt mất sách';
+            if (lostFineType) lostFineType.innerText = '-';
+            if (lostFineStatus) lostFineStatus.innerText = '-';
+            if (lostProcessingFee) lostProcessingFee.innerText = formatCurrency(processingFee);
+            if (lostRecordNextStatus) lostRecordNextStatus.innerText = 'Chờ đền sách';
+            if (lostTotalAmount) lostTotalAmount.innerText = formatCurrency(processingFee);
+            if (lostOutcomeHint) lostOutcomeHint.innerText = 'Sau xác nhận: hồ sơ chuyển Chờ đền sách, không tạo phạt mất sách, chỉ thu phí xử lý bắt buộc (nếu có).';
+        }
+
+        function openLostReport(triggerButton) {
+            const row = triggerButton.closest('tr.lost-record');
+            if (!row) return;
+
+            const status = row.dataset.status || '';
+            if (!isLostEligibleStatus(status)) {
+                showToast('error', 'Chỉ bản ghi Đang mượn hoặc Quá hạn mới được báo mất.');
+                return;
+            }
+
+            selectedLostRow = row;
+            const bookTitle = document.getElementById('lostBookTitle');
+            const borrower = document.getElementById('lostBorrowerName');
+            if (bookTitle) bookTitle.innerText = row.dataset.bookTitle || '-';
+            if (borrower) borrower.innerText = row.dataset.borrower || '-';
+
+            resetLostFormState();
+            openModalById('popup-lost-book');
+        }
+
+        function submitLostBookReport() {
+            const reportDate = document.getElementById('lostReportDate')?.value || '';
+            const method = getSelectedRadioValue('compensateMethod');
+
+            const validDate = Boolean(reportDate);
+            markLostDateError(!validDate);
+            markLostMethodError(!method);
+            if (!validDate || !method) return;
+
+            try {
+                if (!selectedLostRow) throw new Error('Missing row');
+
+                const statusCell = selectedLostRow.querySelector('td:nth-child(6)');
+                const actionCell = selectedLostRow.querySelector('td:nth-child(7)');
+                if (!statusCell || !actionCell) throw new Error('Invalid row structure');
+
+                if (method === 'money') {
+                    selectedLostRow.dataset.status = 'Đang xử lý';
+                    statusCell.innerHTML = '<span class="badge-light-orange">Đang xử lý</span>';
+                } else {
+                    selectedLostRow.dataset.status = 'Chờ đền sách';
+                    statusCell.innerHTML = '<span class="badge-outline-red">Chờ đền sách</span>';
+                }
+
+                actionCell.innerHTML = '<span class="action-disabled">Không khả dụng</span>';
+
+                closeAllPopups();
+                resetLostFormState();
+                showToast('lostSuccess');
+            } catch (error) {
+                showToast('lostError');
+            }
+        }
+
+        function initLostFlow() {
+            document.querySelectorAll('.lost-report-trigger').forEach((button) => {
+                button.addEventListener('click', () => openLostReport(button));
+            });
+
+            document.querySelectorAll('input[name="compensateMethod"]').forEach((input) => {
+                input.addEventListener('change', () => {
+                    markLostMethodError(false);
+                    updateLostOutcome();
+                });
+            });
+
+            const reportDateInput = document.getElementById('lostReportDate');
+            if (reportDateInput) {
+                reportDateInput.addEventListener('change', () => markLostDateError(false));
+            }
+
+            document.querySelectorAll('tr.lost-record').forEach((row) => {
+                const status = row.dataset.status || '';
+                if (!isLostEligibleStatus(status)) {
+                    const actionCell = row.querySelector('td:nth-child(7)');
+                    if (actionCell) actionCell.innerHTML = '<span class="action-disabled">Không khả dụng</span>';
+                }
+            });
+        }
+
         function initReturnFlow() {
             const overlay = document.getElementById('popupOverlay');
             if (overlay) {
@@ -1410,7 +1567,10 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', initReturnFlow);
+        document.addEventListener('DOMContentLoaded', () => {
+            initReturnFlow();
+            initLostFlow();
+        });
     </script>
 </body>
 
