@@ -318,29 +318,30 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Mã phạt</th>
+                                    <th>Mã hồ sơ phạt</th>
                                     <th>Người dùng</th>
                                     <th>Mã người dùng</th>
                                     <th>Tổng tiền phạt chưa thanh toán</th>
-                                    <th></th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
+                                <tr class="fine-record" data-fine-ref="FHS001" data-user-name="Trần Thị Bình" data-user-code="2051010001">
+                                    <td>FHS001</td>
                                     <td>Trần Thị Bình</td>
                                     <td>2051010001</td>
                                     <td class="text-red font-weight-bold">50.000đ</td>
-                                    <td><span class="badge badge-blue-btn" onclick="openPopup('popup-fine', this)">Thanh
-                                            toán</span></td>
+                                    <td><span class="badge badge-orange-solid">Chưa thanh toán</span></td>
+                                    <td><span class="badge badge-blue-btn fine-payment-trigger">Thanh toán</span></td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
+                                <tr class="fine-record" data-fine-ref="FHS002" data-user-name="Nguyễn Tiến Phát" data-user-code="2051010002">
+                                    <td>FHS002</td>
                                     <td>Nguyễn Tiến Phát</td>
                                     <td>2051010002</td>
                                     <td class="text-red font-weight-bold">80.000đ</td>
-                                    <td><span class="badge badge-blue-btn" onclick="openPopup('popup-fine', this)">Thanh
-                                            toán</span></td>
+                                    <td><span class="badge badge-orange-solid">Chưa thanh toán</span></td>
+                                    <td><span class="badge badge-blue-btn fine-payment-trigger">Thanh toán</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -679,17 +680,21 @@
         <div class="popup-modal popup-xl" id="popup-fine">
             <div class="popup-header">
                 <h3>Thanh toán phí phạt</h3>
-                <button class="popup-close" onclick="closePopup()">
+                <button class="popup-close" onclick="requestCloseFinePopup()">
                     <i class='bx bx-x'></i>
                 </button>
             </div>
             <div class="popup-content">
-                <div class="info-user-box">
-                    <label>Người dùng</label>
-                    <strong>Trần Thị Bình</strong>
+                <div class="info-user-box hidden" id="fineUserErrorBox">
+                    <strong class="text-red">Không tìm thấy thông tin người dùng.</strong>
                 </div>
 
-                <div class="table-wrapper">
+                <div class="info-user-box" id="fineUserInfoBox">
+                    <label>Người dùng</label>
+                    <strong id="fineUserName">-</strong>
+                </div>
+
+                <div class="table-wrapper" id="fineDetailTableWrapper">
                     <table class="table no-margin sm-font">
                         <thead>
                             <tr>
@@ -703,63 +708,49 @@
                                 <th>Trạng thái</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>KT001</td>
-                                <td>Kinh tế học vi mô</td>
-                                <td><span class="badge badge-light-blue">Trễ hạn</span></td>
-                                <td>Quá hạn 5 ngày</td>
-                                <td class="text-red font-weight-bold">50.000đ</td>
-                                <td>18/1/2026</td>
-                                <td>KT001</td>
-                                <td><span class="badge badge-orange-solid">Chưa thanh toán</span></td>
-                            </tr>
-                            <tr>
-                                <td>KT001</td>
-                                <td>Kinh tế học vi mô</td>
-                                <td><span class="badge badge-light-orange">Hư hỏng</span></td>
-                                <td>Rách bìa sách</td>
-                                <td class="text-red font-weight-bold">80.000đ</td>
-                                <td>18/1/2026</td>
-                                <td>KT001</td>
-                                <td><span class="badge badge-orange-solid">Chưa thanh toán</span></td>
-                            </tr>
-                            <tr>
-                                <td>KT001</td>
-                                <td>Kinh tế học vi mô</td>
-                                <td><span class="badge badge-light-red">Đền sách</span></td>
-                                <td>Mất sách</td>
-                                <td class="text-red font-weight-bold">500.000đ</td>
-                                <td>18/1/2026</td>
-                                <td>KT001</td>
-                                <td><span class="badge badge-orange-solid">Chưa thanh toán</span></td>
-                            </tr>
-                        </tbody>
+                        <tbody id="fineDetailBody"></tbody>
                     </table>
                 </div>
 
-                <div class="form-group mt-3 payment-methods-box">
+                <div class="form-group mt-3 payment-methods-box" id="finePaymentBox">
                     <label style="font-size: 15px; font-weight: 700; margin-bottom: 15px;">Phương thức thanh
                         toán</label>
-                    <div class="radio-group payment-radio">
+                    <div class="radio-group payment-radio" id="paymentMethodGroup">
                         <label class="radio-label checked-box">
-                            <input type="radio" name="payment" checked> <span>Tiền mặt</span>
+                            <input type="radio" name="payment" value="cash"> <span>Tiền mặt</span>
                         </label>
                         <label class="radio-label">
-                            <input type="radio" name="payment"> <span>Chuyển khoản</span>
+                            <input type="radio" name="payment" value="transfer"> <span>Chuyển khoản</span>
                         </label>
                     </div>
+                    <p class="field-error hidden" id="paymentMethodError">Vui lòng chọn phương thức thanh toán.</p>
                 </div>
 
-                <div class="total-bar">
+                <div class="total-bar" id="fineTotalBar">
                     <span class="lbl">Tổng tiền</span>
-                    <span class="total-amount">630.000đ</span>
+                    <span class="total-amount" id="fineTotalAmount">0đ</span>
                 </div>
             </div>
             <div class="popup-footer center-footer">
-                <button class="btn btn-outline" onclick="closePopup()">Hủy</button>
-                <button class="btn btn-orange" onclick="confirmAction('Xác nhận thanh toán thành công')">Xác
+                <button class="btn btn-outline" onclick="requestCloseFinePopup()">Hủy</button>
+                <button class="btn btn-orange" onclick="submitFinePayment()">Xác
                     nhận</button>
+            </div>
+        </div>
+
+        <div class="popup-modal" id="popup-fine-cancel-confirm">
+            <div class="popup-header">
+                <h3>Xác nhận hủy</h3>
+                <button class="popup-close" onclick="backToFinePopup()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="popup-content">
+                <p class="confirm-message">Bạn có chắc muốn hủy thao tác thanh toán không? Giao dịch sẽ không được ghi nhận.</p>
+            </div>
+            <div class="popup-footer center-footer border-top-light">
+                <button class="btn btn-outline" onclick="backToFinePopup()">Quay lại</button>
+                <button class="btn btn-orange" onclick="confirmCancelFinePopup()">Xác nhận hủy</button>
             </div>
         </div>
 
