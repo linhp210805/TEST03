@@ -39,12 +39,22 @@ function handleLogout() {
     showModal('loginModal');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('due_logged_in') === 'true') {
-        const authPage = document.getElementById('authPage');
+function initAuthState() {
+    const isLoggedIn = localStorage.getItem('due_logged_in') === 'true';
+    const authPage = document.getElementById('authPage');
+    const dashboardPage = document.getElementById('dashboardPage');
+
+    if (isLoggedIn) {
         if (authPage) authPage.classList.remove('active');
-        const dashboardPage = document.getElementById('dashboardPage');
         if (dashboardPage) dashboardPage.classList.remove('hidden');
         switchPage('overview');
+        return;
     }
+
+    if (dashboardPage) dashboardPage.classList.add('hidden');
+    showModal('loginModal');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initAuthState();
 });

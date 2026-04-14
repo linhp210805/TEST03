@@ -36,9 +36,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (isIndexPage) {
             document.getElementById('nav-overview').classList.add('active');
-            // Đảm bảo trang overview hiển thị đúng sau khi sidebar render lại
-            if (typeof switchPage === 'function') {
-                switchPage('overview');
+
+            const overviewLink = document.querySelector('#nav-overview a');
+            if (overviewLink) {
+                overviewLink.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    if (typeof switchPage === 'function') switchPage('overview');
+                });
             }
         } else if (currentURL.includes('borrow.html')) {
             document.getElementById('nav-borrow').classList.add('active');
