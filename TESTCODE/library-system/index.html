@@ -214,18 +214,27 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Mã phiếu</th>
+                                    <th>Mã phiếu mượn</th>
                                     <th>Mã sách</th>
                                     <th>Tên sách</th>
                                     <th>Người mượn</th>
                                     <th>Ngày mượn</th>
                                     <th>Hạn trả</th>
                                     <th>Trạng thái</th>
-                                    <th></th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr class="return-record"
+                                    data-loan-id="PM001"
+                                    data-book-code="KT001"
+                                    data-book-title="Kinh tế vi mô"
+                                    data-borrower="Trần Thị Bình"
+                                    data-borrow-date="10/1/2026"
+                                    data-due-date="24/1/2026"
+                                    data-status="Đang mượn"
+                                    data-overdue-days="0"
+                                    data-overdue-rate="10000">
                                     <td>1</td>
                                     <td>KT001</td>
                                     <td>Kinh tế vi mô</td>
@@ -233,21 +242,41 @@
                                     <td>10/1/2026</td>
                                     <td>24/1/2026</td>
                                     <td><span class="badge badge-blue">Đang mượn</span></td>
-                                    <td><span class="badge badge-red-btn" onclick="openPopup('popup-return', this)">Xác
-                                            nhận trả</span></td>
+                                    <td>
+                                        <span class="badge badge-red-btn return-confirm-trigger">Xác nhận trả</span>
+                                    </td>
                                 </tr>
-                                <tr>
+                                <tr class="return-record row-overdue"
+                                    data-loan-id="PM002"
+                                    data-book-code="TC001"
+                                    data-book-title="Nguyên lý kế toán"
+                                    data-borrower="Trần Lâm"
+                                    data-borrow-date="10/1/2026"
+                                    data-due-date="24/1/2026"
+                                    data-status="Quá hạn"
+                                    data-overdue-days="6"
+                                    data-overdue-rate="10000">
                                     <td>2</td>
                                     <td>TC001</td>
                                     <td>Nguyên lý kế toán</td>
                                     <td>Trần Lâm</td>
                                     <td>10/1/2026</td>
                                     <td>24/1/2026</td>
-                                    <td><span class="badge badge-blue">Đang mượn</span></td>
-                                    <td><span class="badge badge-red-btn" onclick="openPopup('popup-return', this)">Xác
-                                            nhận trả</span></td>
+                                    <td><span class="badge badge-orange">Quá hạn</span></td>
+                                    <td>
+                                        <span class="badge badge-red-btn return-confirm-trigger">Xác nhận trả</span>
+                                    </td>
                                 </tr>
-                                <tr>
+                                <tr class="return-record"
+                                    data-loan-id="PM003"
+                                    data-book-code="KT002"
+                                    data-book-title="Kinh tế vĩ mô"
+                                    data-borrower="Nguyễn Kiệm"
+                                    data-borrow-date="10/1/2026"
+                                    data-due-date="24/1/2026"
+                                    data-status="Đang mượn"
+                                    data-overdue-days="0"
+                                    data-overdue-rate="10000">
                                     <td>3</td>
                                     <td>KT002</td>
                                     <td>Kinh tế vĩ mô</td>
@@ -255,8 +284,28 @@
                                     <td>10/1/2026</td>
                                     <td>24/1/2026</td>
                                     <td><span class="badge badge-blue">Đang mượn</span></td>
-                                    <td><span class="badge badge-red-btn" onclick="openPopup('popup-return', this)">Xác
-                                            nhận trả</span></td>
+                                    <td>
+                                        <span class="badge badge-red-btn return-confirm-trigger">Xác nhận trả</span>
+                                    </td>
+                                </tr>
+                                <tr class="return-record"
+                                    data-loan-id="PM004"
+                                    data-book-code="QT001"
+                                    data-book-title="Quản trị học"
+                                    data-borrower="Phạm Minh"
+                                    data-borrow-date="08/1/2026"
+                                    data-due-date="20/1/2026"
+                                    data-status="Đã trả"
+                                    data-overdue-days="0"
+                                    data-overdue-rate="10000">
+                                    <td>4</td>
+                                    <td>QT001</td>
+                                    <td>Quản trị học</td>
+                                    <td>Phạm Minh</td>
+                                    <td>08/1/2026</td>
+                                    <td>20/1/2026</td>
+                                    <td><span class="badge">Đã trả</span></td>
+                                    <td><span class="action-disabled">Không khả dụng</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -474,28 +523,98 @@
         <div class="popup-modal" id="popup-return">
             <div class="popup-header">
                 <h3>Xác nhận trả sách</h3>
-                <button class="popup-close" onclick="closePopup()">
+                <button class="popup-close" onclick="requestCloseReturnPopup()">
                     <i class='bx bx-x'></i>
                 </button>
             </div>
             <div class="popup-content">
                 <div class="info-grid">
-                    <div><label>Mã sách</label><strong>KT001</strong></div>
-                    <div><label>Tên sách</label><strong>Kinh tế học vi mô</strong></div>
-                    <div><label>Người mượn</label><strong>Trần Thị Bình</strong></div>
-                    <div><label>Hạn trả</label><strong>24/1/2026</strong></div>
+                    <div><label>Mã sách</label><strong id="returnBookCode">-</strong></div>
+                    <div><label>Tên sách</label><strong id="returnBookTitle">-</strong></div>
+                    <div><label>Người mượn</label><strong id="returnBorrower">-</strong></div>
+                    <div><label>Hạn trả</label><strong id="returnDueDate">-</strong></div>
                 </div>
+
                 <div class="form-group mb-0 mt-3">
                     <label>Tình trạng sách khi trả <span class="text-red">*</span></label>
-                    <div class="radio-group col-align">
-                        <label class="radio-label"><input type="radio" name="state" checked> Tốt</label>
-                        <label class="radio-label"><input type="radio" name="state"> Hư hỏng</label>
+                    <div class="radio-group col-align return-condition-group" id="returnConditionGroup">
+                        <label class="radio-label"><input type="radio" name="returnCondition" value="good"> Tốt</label>
+                        <label class="radio-label"><input type="radio" name="returnCondition" value="damaged"> Hư hỏng</label>
+                    </div>
+                    <p class="field-error hidden" id="returnConditionError">Vui lòng chọn tình trạng sách khi trả.</p>
+                </div>
+
+                <div class="return-extra-section hidden" id="damageSection">
+                    <div class="section-title"><i class='bx bx-error-circle'></i> Thông tin hư hỏng</div>
+                    <div class="form-group">
+                        <label>Mức độ hư hỏng <span class="text-red">*</span></label>
+                        <div class="radio-group row-align" id="damageLevelGroup">
+                            <label class="radio-label"><input type="radio" name="damageLevel" value="light"> Hư hỏng nhẹ</label>
+                            <label class="radio-label"><input type="radio" name="damageLevel" value="medium"> Hư hỏng vừa</label>
+                            <label class="radio-label"><input type="radio" name="damageLevel" value="severe"> Hư hỏng nặng</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="damageDescription">Mô tả tình trạng hư hỏng</label>
+                        <textarea id="damageDescription" class="form-input" rows="3" placeholder="Nhập mô tả tình trạng sách khi trả"></textarea>
+                    </div>
+                    <div class="summary-row read-only-row">
+                        <span>Phí phạt hư hỏng tạm tính</span>
+                        <strong id="damageFeeValue">0đ</strong>
+                    </div>
+                </div>
+
+                <div class="return-extra-section hidden" id="overdueSection">
+                    <div class="section-title">Thông tin phạt trễ hạn</div>
+                    <div class="summary-row">
+                        <span>Số ngày quá hạn</span>
+                        <strong id="overdueDaysValue">0 ngày</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Mức phạt mỗi ngày</span>
+                        <strong id="overdueRateValue">0đ</strong>
+                    </div>
+                    <div class="summary-row read-only-row">
+                        <span>Phí phạt trễ hạn tạm tính</span>
+                        <strong id="overdueFeeValue">0đ</strong>
+                    </div>
+                </div>
+
+                <div class="return-summary-box">
+                    <div class="section-title">Tổng hợp phí phạt tạm tính</div>
+                    <div class="summary-row hidden" id="overdueSummaryRow">
+                        <span>Phí phạt trễ hạn</span>
+                        <strong id="overdueSummaryValue">0đ</strong>
+                    </div>
+                    <div class="summary-row hidden" id="damageSummaryRow">
+                        <span>Phí phạt hư hỏng</span>
+                        <strong id="damageSummaryValue">0đ</strong>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Tổng phí phạt</span>
+                        <strong id="totalFineValue">0đ</strong>
                     </div>
                 </div>
             </div>
             <div class="popup-footer center-footer border-top-light">
-                <button class="btn btn-outline" onclick="closePopup()">Hủy</button>
-                <button class="btn btn-orange" onclick="confirmAction('Xác nhận trả sách thành công')">Xác nhận</button>
+                <button class="btn btn-outline" onclick="requestCloseReturnPopup()">Hủy</button>
+                <button class="btn btn-orange" onclick="submitReturnConfirm()">Xác nhận</button>
+            </div>
+        </div>
+
+        <div class="popup-modal" id="popup-return-cancel-confirm">
+            <div class="popup-header">
+                <h3>Xác nhận hủy</h3>
+                <button class="popup-close" onclick="backToReturnPopup()">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+            <div class="popup-content">
+                <p class="confirm-message">Bạn có chắc muốn hủy thao tác trả sách không? Các thông tin đã nhập sẽ không được lưu.</p>
+            </div>
+            <div class="popup-footer center-footer border-top-light">
+                <button class="btn btn-outline" onclick="backToReturnPopup()">Quay lại</button>
+                <button class="btn btn-orange" onclick="confirmCancelReturnPopup()">Xác nhận hủy</button>
             </div>
         </div>
 
