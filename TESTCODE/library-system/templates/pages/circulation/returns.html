@@ -285,6 +285,13 @@
             background: #fff7f7;
         }
 
+        #compInspectionGroup.error {
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 10px;
+            background: #fff7f7;
+        }
+
         .field-error {
             margin-top: 8px;
             color: #dc2626;
@@ -673,64 +680,92 @@
                                     </tr>
                                 </thead>
                                 <tbody id="compensateTableBody">
-                                    <tr>
+                                    <tr class="compensate-record"
+                                        data-record-id="HS-001"
+                                        data-book-title="Kinh tế vi mô"
+                                        data-book-code="KT001"
+                                        data-compensator="Trần Thị Bình"
+                                        data-report-date="18/1/2026"
+                                        data-status="Chờ đền sách">
                                         <td><strong>HS-001</strong></td>
                                         <td class="col-wrap">Kinh tế vi mô</td>
                                         <td>KT001</td>
                                         <td class="col-wrap">Trần Thị Bình</td>
                                         <td>18/1/2026</td>
                                         <td class="col-action">
-                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                            <span class="badge-outline-red compensate-confirm-trigger" style="cursor:pointer;">
                                                 Chờ đền sách
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="compensate-record"
+                                        data-record-id="HS-002"
+                                        data-book-title="Nguyên lý kế toán"
+                                        data-book-code="TC001"
+                                        data-compensator="Trần Lâm"
+                                        data-report-date="20/1/2026"
+                                        data-status="Chờ đền sách">
                                         <td><strong>HS-002</strong></td>
                                         <td class="col-wrap">Nguyên lý kế toán</td>
                                         <td>TC001</td>
                                         <td class="col-wrap">Trần Lâm</td>
                                         <td>20/1/2026</td>
                                         <td class="col-action">
-                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                            <span class="badge-outline-red compensate-confirm-trigger" style="cursor:pointer;">
                                                 Chờ đền sách
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="compensate-record"
+                                        data-record-id="HS-003"
+                                        data-book-title="Quản trị học"
+                                        data-book-code="KD001"
+                                        data-compensator="Huỳnh Nữ"
+                                        data-report-date="22/1/2026"
+                                        data-status="Chờ đền sách">
                                         <td><strong>HS-003</strong></td>
                                         <td class="col-wrap">Quản trị học</td>
                                         <td>KD001</td>
                                         <td class="col-wrap">Huỳnh Nữ</td>
                                         <td>22/1/2026</td>
                                         <td class="col-action">
-                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                            <span class="badge-outline-red compensate-confirm-trigger" style="cursor:pointer;">
                                                 Chờ đền sách
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="compensate-record"
+                                        data-record-id="HS-004"
+                                        data-book-title="English Communication"
+                                        data-book-code="EC004"
+                                        data-compensator="Yến Phương"
+                                        data-report-date="23/1/2026"
+                                        data-status="Chờ đền sách">
                                         <td><strong>HS-004</strong></td>
                                         <td class="col-wrap">English Communication</td>
                                         <td>EC004</td>
                                         <td class="col-wrap">Yến Phương</td>
                                         <td>23/1/2026</td>
                                         <td class="col-action">
-                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
+                                            <span class="badge-outline-red compensate-confirm-trigger" style="cursor:pointer;">
                                                 Chờ đền sách
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="compensate-record"
+                                        data-record-id="HS-005"
+                                        data-book-title="Lịch sử Đảng"
+                                        data-book-code="CT001"
+                                        data-compensator="Văn Ân"
+                                        data-report-date="24/1/2026"
+                                        data-status="Đã xử lý - Đền sách">
                                         <td><strong>HS-005</strong></td>
                                         <td class="col-wrap">Lịch sử Đảng</td>
                                         <td>CT001</td>
                                         <td class="col-wrap">Văn Ân</td>
                                         <td>24/1/2026</td>
                                         <td class="col-action">
-                                            <span class="badge-outline-red" style="cursor:pointer;" onclick="document.getElementById('popupOverlay').style.display='flex'; document.getElementById('popup-compensate-confirm').style.display='block';">
-                                                Chờ đền sách
-                                            </span>
+                                            <span class="badge-outline-blue">Đã xử lý - Đền sách</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -832,12 +867,12 @@
 
         <!-- Xác nhận đền sách POPUP -->
         <div id="popup-compensate-confirm" class="popup-modal"
-            style="display:none; width:560px; background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+            style="display:none; width:min(620px, 96vw); background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); max-height:90vh; overflow:hidden;">
             <div class="popup-header" style="position:relative; padding:24px 24px 10px 24px;">
                 <h3 style="font-weight:700; font-size:22px; width:100%; text-align:center; margin:0;">Xác nhận đền sách
                 </h3>
                 <button class="popup-close" type="button"
-                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-compensate-confirm').style.display='none';"
+                    onclick="closeAllPopups()"
                     style="background:transparent; border:1px solid #e5e7eb; border-radius:8px; width:32px; height:32px; font-size:18px; cursor:pointer; position:absolute; right:20px; top:20px; color:#6b7280; display:flex; align-items:center; justify-content:center;">&times;</button>
             </div>
             <div class="popup-content" style="padding:20px 24px 24px;">
@@ -845,35 +880,59 @@
                     style="display:flex; flex-direction:column; gap:20px; background:#f8f9fa; padding:24px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:10px;">
                     <div style="border-bottom:1px solid #e5e7eb; padding-bottom:20px;">
                         <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Mã hồ sơ</div>
-                        <strong style="font-size:18px; color:#111827;">1</strong>
+                        <strong id="compRecordId" style="font-size:18px; color:#111827;">-</strong>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 20px;">
                         <div style="min-width:0;">
                             <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Sách cần đền</div>
-                            <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Kinh tế vi mô</strong>
+                            <strong id="compBookTitle" style="font-size:15px; color:#111827; display:block; word-break:break-word;">-</strong>
                         </div>
                         <div style="min-width:0;">
                             <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Mã sách</div>
-                            <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">KT001</strong>
+                            <strong id="compBookCode" style="font-size:15px; color:#111827; display:block; word-break:break-word;">-</strong>
                         </div>
                         <div style="min-width:0;">
                             <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Người đền</div>
-                            <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">Trần Thị Bình</strong>
+                            <strong id="compBorrower" style="font-size:15px; color:#111827; display:block; word-break:break-word;">-</strong>
                         </div>
                         <div style="min-width:0;">
-                            <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Ngày khai báo</div>
-                            <strong style="font-size:15px; color:#111827; display:block; word-break:break-word;">24/1/2026</strong>
+                            <div style="color:#6b7280; font-size:12px; margin-bottom:6px; font-weight:600;">Ngày báo mất</div>
+                            <strong id="compReportDate" style="font-size:15px; color:#111827; display:block; word-break:break-word;">-</strong>
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group" style="margin-top:16px;">
+                    <label style="font-weight:700; font-size:13px; margin-bottom:10px; display:block; color:#111827;">Tình trạng sách đền <span style="color:#ef4444;">*</span></label>
+                    <div id="compInspectionGroup" class="radio-group" style="display:flex; gap:14px; flex-wrap:wrap;">
+                        <label class="radio-label" style="display:flex; align-items:center; gap:8px; border:1px solid #e5e7eb; border-radius:8px; padding:10px 12px; background:#fff;">
+                            <input type="radio" name="compInspectionResult" value="pass"> Đạt yêu cầu
+                        </label>
+                        <label class="radio-label" style="display:flex; align-items:center; gap:8px; border:1px solid #e5e7eb; border-radius:8px; padding:10px 12px; background:#fff;">
+                            <input type="radio" name="compInspectionResult" value="fail"> Không đạt yêu cầu
+                        </label>
+                    </div>
+                    <p id="compInspectionError" class="field-error hidden">Vui lòng chọn kết quả kiểm tra sách đền.</p>
+                </div>
+
+                <div class="form-group" style="margin-top:14px;">
+                    <label for="compInspectionNote" style="font-weight:700; font-size:13px; margin-bottom:8px; display:block; color:#111827;">Ghi chú kiểm tra</label>
+                    <textarea id="compInspectionNote" class="form-input" rows="3" placeholder="Nhập ghi chú kiểm tra nếu cần"></textarea>
+                </div>
+
+                <div class="return-summary-box" style="margin-top:14px;">
+                    <div class="section-title">Kết quả sau xác nhận</div>
+                    <div class="summary-row"><span>Trạng thái phiếu mượn</span><strong>Đã xử lý - Đền sách</strong></div>
+                    <div class="summary-row"><span>Trạng thái sách nhập kho</span><strong>Sẵn sàng</strong></div>
                 </div>
             </div>
             <div class="popup-footer"
                 style="display:flex; justify-content:flex-end; gap:16px; border-top:1px solid #f0f0f0; padding:16px 20px;">
                 <button class="btn btn-outline" type="button"
-                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-compensate-confirm').style.display='none';"
+                    onclick="closeAllPopups()"
                     style="padding:10px 28px; border:1px solid #e5e7eb; background:#fff; border-radius:8px; font-weight:600; cursor:pointer; color:#111827; outline:none;">Hủy</button>
                 <button class="btn btn-red" type="button"
-                    onclick="document.getElementById('popupOverlay').style.display='none'; document.getElementById('popup-compensate-confirm').style.display='none'; showToast('compensateSuccess');"
+                    onclick="submitCompensateConfirm()"
                     style="padding:10px 28px; background:#ff5722; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; outline:none;">Xác
                     nhận</button>
             </div>
@@ -1134,19 +1193,27 @@
     <script>
         let selectedReturnRow = null;
         let selectedLostRow = null;
+        let selectedCompensateRow = null;
         let overdueFineValue = 0;
+
+        function normalizeSearchText(text) {
+            return (text || '')
+                .toString()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim();
+        }
 
         function performSearch() {
             const searchInput = document.getElementById('searchInput');
             if (!searchInput) return;
 
-            const query = searchInput.value.toLowerCase().trim();
-            const activeTabPane = document.querySelector('.tab-pane.active') || document.querySelector('.tab-pane:not(.hidden)');
-            if (!activeTabPane) return;
+            const query = normalizeSearchText(searchInput.value);
+            const allRows = document.querySelectorAll('.tab-pane tbody tr');
 
-            const rows = activeTabPane.querySelectorAll('tbody tr');
-            rows.forEach((row) => {
-                const rowText = row.textContent.toLowerCase();
+            allRows.forEach((row) => {
+                const rowText = normalizeSearchText(row.textContent);
                 row.style.display = !query || rowText.includes(query) ? '' : 'none';
             });
         }
@@ -1525,6 +1592,106 @@
             });
         }
 
+        function isCompensateEligibleStatus(status) {
+            return status === 'Chờ đền sách';
+        }
+
+        function markCompInspectionError(showError) {
+            const group = document.getElementById('compInspectionGroup');
+            const error = document.getElementById('compInspectionError');
+            if (!group || !error) return;
+
+            group.classList.toggle('error', showError);
+            error.classList.toggle('hidden', !showError);
+        }
+
+        function resetCompensateFormState() {
+            document.querySelectorAll('input[name="compInspectionResult"]').forEach((input) => {
+                input.checked = false;
+            });
+            const note = document.getElementById('compInspectionNote');
+            if (note) note.value = '';
+            markCompInspectionError(false);
+        }
+
+        function syncCompensatePopupFromRow(row) {
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = value || '-';
+            };
+
+            setText('compRecordId', row.dataset.recordId);
+            setText('compBookTitle', row.dataset.bookTitle);
+            setText('compBookCode', row.dataset.bookCode);
+            setText('compBorrower', row.dataset.compensator);
+            setText('compReportDate', row.dataset.reportDate);
+        }
+
+        function openCompensateConfirm(triggerEl) {
+            const row = triggerEl.closest('tr.compensate-record');
+            if (!row) return;
+
+            const status = row.dataset.status || '';
+            if (!isCompensateEligibleStatus(status)) {
+                showToast('error', 'Chỉ hồ sơ Chờ đền sách mới được xác nhận.');
+                return;
+            }
+
+            selectedCompensateRow = row;
+            syncCompensatePopupFromRow(row);
+            resetCompensateFormState();
+            openModalById('popup-compensate-confirm');
+        }
+
+        function submitCompensateConfirm() {
+            const inspection = getSelectedRadioValue('compInspectionResult');
+            if (!inspection) {
+                markCompInspectionError(true);
+                return;
+            }
+
+            markCompInspectionError(false);
+
+            if (inspection === 'fail') {
+                showToast('compensateError');
+                return;
+            }
+
+            try {
+                if (!selectedCompensateRow) throw new Error('Missing compensate row');
+
+                const statusCell = selectedCompensateRow.querySelector('td:nth-child(6)');
+                if (!statusCell) throw new Error('Missing status cell');
+
+                selectedCompensateRow.dataset.status = 'Đã xử lý - Đền sách';
+                statusCell.innerHTML = '<span class="badge-outline-blue">Đã xử lý - Đền sách</span>';
+
+                closeAllPopups();
+                resetCompensateFormState();
+                showToast('compensateSuccess');
+            } catch (error) {
+                showToast('compensateError');
+            }
+        }
+
+        function initCompensateFlow() {
+            document.querySelectorAll('.compensate-confirm-trigger').forEach((trigger) => {
+                trigger.addEventListener('click', () => openCompensateConfirm(trigger));
+            });
+
+            document.querySelectorAll('tr.compensate-record').forEach((row) => {
+                const status = row.dataset.status || '';
+                const trigger = row.querySelector('.compensate-confirm-trigger');
+                if (!isCompensateEligibleStatus(status) && trigger) {
+                    trigger.outerHTML = '<span class="badge-outline-blue">Đã xử lý - Đền sách</span>';
+                }
+            });
+
+            document.querySelectorAll('input[name="compInspectionResult"]').forEach((input) => {
+                input.addEventListener('change', () => markCompInspectionError(false));
+            });
+        }
+
         function initReturnFlow() {
             const overlay = document.getElementById('popupOverlay');
             if (overlay) {
@@ -1570,6 +1737,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             initReturnFlow();
             initLostFlow();
+            initCompensateFlow();
         });
     </script>
 </body>
